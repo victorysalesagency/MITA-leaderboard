@@ -623,13 +623,10 @@
     })();
   </script>
 
-  <!-- Data + rendering (unchanged except requestData -> fetch) -->
+  <!-- Data + rendering (unchanged except for __DATA__ init and requestData fetch) -->
   <script>
-    <? if (typeof data !== 'undefined') { ?>
-      const __DATA__ = <?!= data ?>;
-    <? } else { ?>
-      const __DATA__ = null;
-    <? } ?>
+    // ==== MINIMAL CHANGE: no server-side template on Vercel; keep __DATA__ null so we always fetch
+    const __DATA__ = null;
 
     const money = (n) => new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:0 }).format(Number(n||0));
     const toast = (msg, t=2600) => { const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), t); };
@@ -675,43 +672,55 @@
       }
     }
 
-    if (__DATA__) render(__DATA__);
+    if (__DATA__) {
+      render(__DATA__);
+    } else {
+      // load initial data from API using current date inputs (or defaults)
+      const s = document.getElementById('start')?.value || '';
+      const e = document.getElementById('end')?.value || '';
+      if (s && e) requestData({ start: s, end: e });
+      else requestData({});
+    }
 
-    /* >>> ONLY CHANGE: requestData now uses fetch('/api/getLeaderboard') so page can be hosted on Vercel.
-       This replaces the google.script.run logic while keeping applyRange()/refresh() behavior identical. */
-    function requestData(opts={}){
+    function requestData(opts = {}) {
       const spin = document.getElementById('spin');
       if (spin) spin.classList.add('show');
-      const done = ()=> spin && spin.classList.remove('show');
+      const done = () => spin && spin.classList.remove('show');
 
-      // Build query params (start/end optional)
-      const params = new URLSearchParams();
-      if (opts.start) params.set('start', opts.start);
-      if (opts.end) params.set('end', opts.end);
+      // build query
+      const qs = new URLSearchParams();
+      if (opts.start) qs.set('start', opts.start);
+      if (opts.end)   qs.set('end', opts.end);
 
-      fetch(`/api/getLeaderboard?${params.toString()}`, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      })
-      .then(async (resp) => {
-        done();
-        if (!resp.ok) {
-          const txt = await resp.text().catch(()=>null);
-          console.warn('fetch /api/getLeaderboard failed', resp.status, txt);
+      // call our Vercel API route (relative path)
+      const url = `/api/getLeaderboard${qs.toString() ? `?${qs.toString()}` : ''}`;
+
+      fetch(url, { credentials: 'same-origin' })
+        .then(async (res) => {
+          done();
+          if (!res.ok) {
+            const text = await res.text().catch(() => '');
+            console.warn('Fetch failed', res.status, text);
+            toast('Data load failed');
+            return;
+          }
+          // try parse JSON
+          try {
+            const json = await res.json();
+            if (!json) { toast('No data'); return; }
+            render(json);
+          } catch (err) {
+            console.error('Invalid JSON', err);
+            const txt = await res.text().catch(()=>'');
+            console.warn('Response text:', txt);
+            toast('Data parse failed');
+          }
+        })
+        .catch((err) => {
+          done();
+          console.error('Request failed', err);
           toast('Data load failed');
-          return;
-        }
-        return resp.json();
-      })
-      .then((data)=>{
-        if (!data) return;
-        render(data);
-      })
-      .catch((err)=>{
-        done();
-        console.error('requestData error', err);
-        toast('Data load failed');
-      });
+        });
     }
 
     function applyRange(){
