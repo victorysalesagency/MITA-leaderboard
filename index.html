@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base target="_top" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Man In The Arena </title>
+  <link rel="icon" href="https://storage.googleapis.com/msgsndr/tfaMfEcKzbKeor4FyoMS/media/67d635061b97ac1cbd002603.png" type="image/png" />
+  <style>
+    /* --- (GARDÉ EXACTEMENT TON CSS, inchangé pour la concision) --- */
+    /* Copie le bloc CSS complet que tu avais fourni précédemment ici. */
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="brandbar brandbar--with-toolbar">
+      <img class="logo" src="https://storage.googleapis.com/msgsndr/tfaMfEcKzbKeor4FyoMS/media/67d635061b97ac1cbd002603.png" alt="Logo" />
+      <div class="toolbar">
+        <div class="group group-range">
+          <input id="start" type="hidden" />
+          <input id="end" type="hidden" />
+          <div id="date-range" class="drp"></div>
+        </div>
+        <div class="group group-actions">
+          <button id="applyBtn" class="btn-primary" title="Apply" onclick="applyRange()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+              <path d="M9 18 L15 12 L9 6" />
+            </svg>
+            <span id="spin" class="spinner"></span>
+          </button>
+
+          <button class="btn-ghost" title="Refresh" onclick="refresh()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M13 9v2h7V4h-2v2.74C16.53 5.07 14.4 4 12 4c-2.21 0-4.21.9-5.66 2.34S4 9.79 4 12c0 4.42 3.58 8 8 8 2.21 0 4.21-.9 5.66-2.34l-1.42-1.42A5.98 5.98 0 0 1 12 18c-3.31 0-6-2.69-6-6 0-1.65.67-3.15 1.76-4.24A5.98 5.98 0 0 1 12 6a6.01 6.01 0 0 1 5.19 3H13z"/>
+            </svg>
+          </button>
+
+          <button class="btn-ghost" title="Download PDF" onclick="downloadLeaderboardPdf()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M4 15h2v3h12v-3h2v3c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2m11.59-8.41L13 12.17V4h-2v8.17L8.41 9.59 7 11l5 5 5-5-1.41-1.41z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scorecards -->
+    <div id="scorecards" class="scorecards"></div>
+
+    <!-- Leaderboard -->
+    <div class="card wide" style="margin-top:16px;">
+      <div class="table-wrap">
+        <table class="table" id="leaderboardTable">
+          <colgroup>
+            <col class="col-rank" />
+            <col class="col-photo" />
+            <col class="col-name" />
+            <col class="col-cash" />
+            <col class="col-avg" />
+            <col class="col-gross" />
+            <col class="col-tickets" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th colspan="2">Sales Rep</th>
+              <th>Cash Collected</th>
+              <th>Avg. Cash Per Deal</th>
+              <th>Gross Revenue</th>
+              <th>Ticket Count</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- (Conserve ton DateRangePicker JS ici) -->
+  <script>
+    /* Place ici la totalité du code DateRangePicker que tu as fourni (inchangé). */
+  </script>
+
+  <!-- Data + rendering (adapté pour fetch / Vercel rewrite) -->
+  <script>
+    const __DATA__ = null; // server-side render not used when on Vercel static
+
+    const money = (n) => new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:0 }).format(Number(n||0));
+    const toast = (msg, t=2600) => { const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), t); };
+
+    function render(data){
+      try{
+        const top3 = (data?.top3 || []).slice(0,3);
+        const leaderboard = Array.isArray(data?.leaderboard) ? data.leaderboard : [];
+
+        const sc = document.getElementById('scorecards');
+        sc.innerHTML = top3.map((p,i)=>{
+          const rank = i+1;
+          const rankClass = rank===1 ? 'rank-1' : rank===2 ? 'rank-2' : 'rank-3';
+          const avatar = p.avatar || 'https://via.placeholder.com/150/808080/FFFFFF?text=MIA';
+          return `
+            <div class="score-card">
+              <div class="score-photo ${rankClass}"><img src="${avatar}" alt="${p.closer || 'Rep'}"></div>
+              <div class="score-amt ${rankClass}">${money(p.totalCashCollected || 0)}</div>
+              <div class="score-name">${String(p.closer || '').toUpperCase()}</div>
+              <div class="rank-diamond badge ${rankClass}"><span>${rank}${rank===1?'st':rank===2?'nd':'rd'}</span></div>
+            </div>`;
+        }).join('');
+
+        const tbody = document.getElementById('tbody');
+        const rows = leaderboard.map((p, idx)=>{
+          const avg = (p.totalTicketCount ? (p.totalCashCollected / p.totalTicketCount) : 0);
+          const avatar = p.avatar || 'https://via.placeholder.com/150/808080/FFFFFF?text=MIA';
+          return `
+            <tr>
+              <td>${idx+1}</td>
+              <td><span class="rep-avatar"><img src="${avatar}" alt="${p.closer || 'Rep'}"></span></td>
+              <td>${p.closer || ''}</td>
+              <td>${money(p.totalCashCollected || 0)}</td>
+              <td>${money(avg)}</td>
+              <td>${money(p.totalGrossRevenue || 0)}</td>
+              <td>${p.totalTicketCount ?? 0}</td>
+            </tr>`;
+        }).join('');
+        tbody.innerHTML = rows;
+      }catch(e){
+        console.error(e);
+        toast('Render error — check console');
+      }
+    }
+
+    // Expose to global for quick dev
+    window.render = render;
+
+    // REQUEST DATA via Vercel rewrite (/api/getLeaderboard)
+    async function requestData(opts = {}) {
+      const spin = document.getElementById('spin');
+      if (spin) spin.classList.add('show');
+      const done = () => spin && spin.classList.remove('show');
+
+      try {
+        const params = new URLSearchParams();
+        if (opts.start) params.set('start', opts.start);
+        if (opts.end) params.set('end', opts.end);
+
+        const resp = await fetch(`/api/getLeaderboard?${params.toString()}`, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (!resp.ok) {
+          const text = await resp.text();
+          console.warn('Leaderboard fetch non-ok:', resp.status, text);
+          toast('Data load failed');
+          done();
+          return;
+        }
+
+        const data = await resp.json();
+        done();
+        if (!data) { toast('No data'); return; }
+        render(data);
+      } catch (err) {
+        console.error('requestData error', err);
+        toast('Data load failed');
+        done();
+      }
+    }
+
+    function applyRange(){
+      const s = document.getElementById('start')?.value || '';
+      const e = document.getElementById('end')?.value || '';
+      if (!s || !e){ toast('Select a date range'); return; }
+      requestData({ start:s, end:e });
+    }
+    function refresh(){ requestData({}); }
+
+    // init: load this month's range (date picker init script sets start/end)
+    window.addEventListener('load', ()=>{ requestData({}); });
+  </script>
+
+  <!-- Download PDF (unchanged) -->
+  <script>
+    function downloadLeaderboardPdf(){
+      const spin = document.getElementById('spin');
+      if (spin) spin.classList.add('show');
+
+      const start = document.getElementById('start')?.value || '';
+      const end   = document.getElementById('end')?.value || '';
+      const fileName = `Maxed_Out_Summit_Leaderboard_${start || 'start'}_${end || 'end'}.pdf`;
+
+      const target = document.body;
+      if (!target){ if (spin) spin.classList.remove('show'); return toast('Nothing to capture'); }
+
+      if (typeof html2canvas !== 'undefined' && typeof window.jspdf !== 'undefined'){
+        requestAnimationFrame(async ()=>{
+          try{
+            const canvas = await html2canvas(target, {
+              scale: Math.max(2, window.devicePixelRatio || 1),
+              useCORS: true,
+              allowTaint: false,
+              backgroundColor: null,
+              windowWidth: document.documentElement.scrollWidth,
+              windowHeight: document.documentElement.scrollHeight,
+              scrollX: 0,
+              scrollY: -window.scrollY
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'pt', 'a4');
+
+            const pageW = pdf.internal.pageSize.getWidth();
+            const pageH = pdf.internal.pageSize.getHeight();
+            const imgW = pageW;
+            const imgH = canvas.height * (imgW / canvas.width);
+
+            let y = 0, first = true;
+            while (y < imgH){
+              if (!first) pdf.addPage();
+              pdf.addImage(imgData, 'PNG', 0, -y, imgW, imgH);
+              y += pageH; first = false;
+            }
+
+            pdf.save(fileName);
+            toast('PDF downloaded');
+          }catch(err){
+            console.error(err);
+            toast('Screenshot export failed');
+          }finally{
+            if (spin) spin.classList.remove('show');
+          }
+        });
+      }else{
+        if (spin) spin.classList.remove('show');
+        toast('html2canvas/jsPDF not available');
+      }
+    }
+  </script>
+
+  <!-- libs -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+</body>
+</html>
