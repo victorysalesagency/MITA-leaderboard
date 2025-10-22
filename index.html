@@ -1,332 +1,959 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <base target="_top" />
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Man In The Arena </title>
-  <link rel="icon" href="https://storage.googleapis.com/msgsndr/tfaMfEcKzbKeor4FyoMS/media/67d635061b97ac1cbd002603.png" type="image/png" />
+    <base target="_top" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Leaderboard | MITA</title>
+    <link rel="icon"
+        href="https://storage.googleapis.com/msgsndr/tfaMfEcKzbKeor4FyoMS/media/67d635061b97ac1cbd002603.png"
+        type="image/png" />
+    <style>
+        :root {
+            --brand: hsl(40, 50%, 60%);
+            --brand-dark: hsl(40, 50%, 20%);
+            --brand-soft: hsl(40, 50%, 75%);
+            --accent-dark-brown: hsl(40, 50%, 20%);
+            --accent-light-gold: hsl(40, 50%, 65%);
+            --accent-cream: hsl(40, 50%, 75%);
+            --accent-gold: hsl(40, 50%, 60%);
+            --accent-bronze: hsl(40, 50%, 25%);
+            --white: hsl(0, 0%, 100%);
+            --white-rgb: 255, 255, 255;
+            --black: hsl(0, 0%, 0%);
+            --black-rgb: 0, 0, 0;
+            --ink: hsl(0, 0%, 96%);
+            --muted: hsl(0, 0%, 70%);
+            --input-bg: hsl(0, 0%, 10%);
+            --card: hsl(0, 0%, 12%);
+            --border: hsl(0, 0%, 20%);
+            --border-soft: hsl(0, 0%, 15%);
+            --border-softer: hsl(0, 0%, 25%);
+            --ghost-hover: hsl(0, 0%, 18%);
+            --shadow-strong: 0 0.5rem 1.5rem hsla(0, 0%, 0%, 0.4);
+            --shadow-soft: 0 0.25rem 1rem hsla(0, 0%, 0%, 0.3);
+            --radius: 1.125rem;
+            --ctrl-h: 2.75rem;
+            --ctrl-r: 0.75rem;
+            --row-hover: hsla(0, 0%, 100%, 0.04);
+            --cell-x: 0.75rem;
+        }
 
-  <style>
-    :root{
-      --brand: hsl(40, 50%, 60%);
-      --brand-dark: hsl(40, 51%, 20%);
-      --brand-soft: hsl(40, 50%, 75%);
-      --accent-dark-brown: hsl(40, 51%, 20%);
-      --accent-light-gold: hsl(40, 50%, 65%);
-      --accent-cream: hsl(40, 50%, 75%);
-      --accent-gold: hsl(40, 50%, 60%);
-      --accent-bronze: hsl(39, 50%, 24%);
-      --white: #fff; --white-rgb: 255,255,255;
-      --black: #000; --black-rgb: 0,0,0;
-      --ink: hsl(0,0%,96%);
-      --muted: hsl(0,0%,69%);
-      --input-bg: #171717;
-      --card: #1e1e1e;
-      --border: #333;
-      --border-soft: #2a2a2a;
-      --border-softer: #3a3a3a;
-      --ghost-hover: #2b2b2b;
-      --shadow-strong: 0 8px 24px rgba(0,0,0,.4);
-      --shadow-soft: 0 4px 16px rgba(0,0,0,.3);
-      --radius: 18px;
-      --ctrl-h: 44px;
-      --ctrl-r: 12px;
-      --rank-1: hsl(210, 10%, 65%);
-      --rank-2: hsl(40, 50%, 60%);
-      --rank-3: hsl(30, 70%, 60%);
-      --row-hover: rgba(255,255,255,.04);
-      --cell-x: 12px;
-    }
+        html {
+            height: auto;
+            overflow-y: auto;
+            overflow-x: hidden
+        }
 
-    /* === Single vertical scrollbar (unchanged) === */
-    html { height:auto; overflow-y:auto; overflow-x:hidden; }
-    body {
-      height:auto; min-height:100%;
-      overflow-y:visible; overflow-x:hidden;
-      margin:0; padding:0 5rem;
-      background:url("https://storage.googleapis.com/msgsndr/OLDsMUaIywbz0mgllz8s/media/68b367c8f772203732a23dfe.jpeg") no-repeat center center fixed;
-      background-size:cover; color:var(--ink);
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      position:relative;
-    }
+        body {
+            height: auto;
+            min-height: 100%;
+            overflow-y: visible;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0 20%;
+            background: url("https://storage.googleapis.com/msgsndr/OLDsMUaIywbz0mgllz8s/media/68b367c8f772203732a23dfe.jpeg") no-repeat center center fixed;
+            background-size: cover;
+            color: var(--ink);
+            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            position: relative
+        }
 
-    .wrap{max-width:100%; margin:24px auto 64px; padding:0; min-width:0; position:relative; z-index:1;}
+        .wrap {
+            max-width: 100%;
+            margin: 24px auto 64px;
+            padding: 0;
+            min-width: 0;
+            position: relative;
+            z-index: 1
+        }
 
-    /* Top bar */
-    .brandbar{display:flex; align-items:center; gap:12px; margin-bottom:24px; justify-content:space-between; flex-wrap:wrap; overflow:visible;}
-    .logo{height:2.5rem; width:auto; display:block;}
-    .toolbar{display:flex; gap:10px; align-items:center; margin-left:auto; justify-content:flex-end; flex-wrap:wrap; width:auto;}
-    .toolbar .group{display:flex; gap:8px; align-items:center;}
-    button{border:none; cursor:pointer; border-radius:999px; padding:.25rem; font-weight:700; box-shadow:var(--shadow-soft); transition:transform .05s ease, background .15s ease, color .15s ease; color:var(--ink); background:transparent;}
-    button:active{transform:translateY(1px) scale(.98);}
-    .btn-primary{background:linear-gradient(45deg,var(--accent-dark-brown),var(--accent-light-gold),var(--accent-cream),var(--accent-gold),var(--accent-bronze)); color:var(--black);}
-    .btn-primary:hover{filter:brightness(1.05);}
-    .btn-ghost{background:transparent; border:1px solid var(--border); color:var(--ink);}
-    .btn-ghost:hover{background:var(--ghost-hover);}
-    .toolbar .group button{height:var(--ctrl-h); width:var(--ctrl-h); border-radius:var(--ctrl-r); display:inline-flex; align-items:center; justify-content:center; line-height:0;}
-    .toolbar .group button svg, .drp .drp-trigger svg{width:1.5rem; height:1.5rem;}
-    .spinner{display:none;}
-    .spinner.show{display:inline-block; margin-left:6px; border:2px solid rgba(var(--white-rgb), .15); border-top-color:var(--brand); border-radius:50%; width:14px; height:14px; animation:spin 1s linear infinite; vertical-align:middle;}
-    @keyframes spin{to{transform:rotate(360deg);}}
+        .brandbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            overflow: visible
+        }
 
-    /* ===== Date Range Picker (unchanged + preview styles added) ===== */
-    .drp{
-      --drp-bg:var(--input-bg); --drp-border:var(--border); --drp-ink:var(--ink); --drp-muted:var(--muted);
-      --drp-ring: color-mix(in oklab, var(--accent-gold) 40%, transparent);
-      --drp-selected-bg: var(--accent-gold); --drp-selected-fg: var(--black);
-      --drp-inrange-bg: color-mix(in oklab, var(--accent-gold) 22%, transparent);
-      --drp-today-ring: var(--accent-gold); --drp-cell: 38px; --drp-shadow: var(--shadow-soft);
-    }
-    .drp .drp-field{position:relative; display:inline-flex; align-items:center; gap:10px; background:var(--drp-bg); color:var(--drp-ink); border:1px solid var(--drp-border); border-radius:var(--ctrl-r); padding:.25rem; height:var(--ctrl-h); box-shadow:var(--drp-shadow); min-width:280px;}
-    .drp .drp-label{display:none!important;}
-    .drp .drp-display{display:inline-flex; align-items:center; gap:8px; flex:1 1 auto; min-width:0; justify-content:space-between;}
-    .drp .drp-text{display:inline-block; background:transparent; border:0; color:var(--drp-ink); font:inherit; padding:0; outline:none; pointer-events:none; min-width:96px; font-size:inherit;}
-    .drp .drp-sep{opacity:.65;}
-    .drp .drp-trigger{display:inline-flex; align-items:center; justify-content:center; border:none; background:transparent; color:var(--drp-ink); border-radius:999px; width:calc(var(--ctrl-h) - 14px); height:calc(var(--ctrl-h) - 14px); cursor:pointer; transition:background 120ms ease, transform 60ms ease;}
-    .drp .drp-trigger:hover{background:var(--ghost-hover);}
-    .drp .drp-popover{position:absolute; z-index:9999; top:calc(100% + 8px); left:0; background:rgba(30,30,30,.95); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:1px solid var(--border-soft); border-radius:24px; box-shadow:var(--shadow-strong); color:var(--drp-ink); width:max-content; opacity:0; transform:scale(.98); pointer-events:none; transition:opacity 120ms ease, transform 120ms ease;}
-    .drp .drp-popover.open{opacity:1; transform:scale(1); pointer-events:auto;}
-    .drp .drp-popover.is-top{ top:auto; bottom:calc(100% + 8px); }
-    .drp .drp-surface{display:grid; grid-template-rows:auto auto 1fr; padding:10px; min-width:300px;}
-    .drp .drp-head{display:grid; grid-template-columns:34px 1fr 34px; align-items:center; gap:6px; margin-bottom:8px;}
-    .drp .drp-nav{display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--drp-ink); cursor:pointer;}
-    .drp .drp-nav:hover{background:var(--ghost-hover);}
-    .drp .drp-caption{text-align:center; font-weight:800; letter-spacing:.02em;}
-    .drp .drp-week{display:grid; grid-template-columns:repeat(7,var(--drp-cell)); justify-content:center; gap:4px; margin:4px 6px 6px;}
-    .drp .drp-wd{height:24px; line-height:24px; text-align:center; font-size:11px; color:var(--drp-muted); text-transform:uppercase; letter-spacing:.06em;}
-    .drp .drp-grid{gap: 0.5rem;display:grid; grid-template-columns:repeat(7,var(--drp-cell)); grid-template-rows:repeat(6,var(--drp-cell)); justify-content:center; padding:4px 6px 8px;}
-    .drp .drp-day{position:relative; width:var(--drp-cell); height:var(--drp-cell); border-radius:12px; border:1px solid transparent; background:transparent; color:var(--drp-ink); font:inherit; cursor:pointer; outline:none; display:grid; place-items:center; user-select:none; transition:background 100ms ease, color 100ms ease, border-color 100ms ease;}
-    .drp .drp-day:hover{background:var(--ghost-hover);}
-    .drp .drp-day:focus-visible{border-color:var(--drp-ring);}
-    .drp .drp-day.is-outside{opacity:.5;}
-    .drp .drp-day.is-today{outline:2px solid var(--drp-today-ring); outline-offset:2px; border-radius:12px;}
-    .drp .drp-day.is-inrange{background:var(--drp-inrange-bg);}
-    .drp .drp-day.is-start,.drp .drp-day.is-end{background:var(--drp-selected-bg); color:var(--drp-selected-fg); font-weight:800;}
-    .drp .drp-day.is-start::before,.drp .drp-day.is-end::before{content:""; position:absolute; inset:0; border-radius:12px; box-shadow:inset 0 0 0 1px rgba(var(--black-rgb), .15);}
+        .logo {
+            height: 2.5rem;
+            width: auto;
+            display: block
+        }
 
-    /* >>> NEW: stronger live preview while hovering between start and hovered day */
-    .drp .drp-day.is-preview{
-      background: color-mix(in oklab, var(--drp-selected-bg) 28%, transparent);
-    }
-    .drp .drp-day.is-preview-edge{
-      background: color-mix(in oklab, var(--drp-selected-bg) 92%, transparent);
-      color: var(--drp-selected-fg);
-      font-weight: 800;
-      box-shadow: inset 0 0 0 1px rgba(var(--black-rgb), .15);
-    }
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-left: auto;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            width: auto
+        }
 
-    /* Scorecards & table (unchanged) */
-    .scorecards{display:grid; grid-template-columns:repeat(3, minmax(240px,1fr)); gap:12px; margin-top:12px;}
-    .score-card{--card-pad:2rem; background:linear-gradient(45deg, hsla(0,0%,12%,.5), hsla(0,0%,12%,.2), hsla(0,0%,0%,.5)); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); color:var(--ink); border-radius:var(--radius); padding:var(--card-pad); box-shadow:var(--shadow-soft); border:1px solid var(--border-soft); min-width:0; display:flex; flex-direction:column; justify-content:space-between; gap:1rem; overflow:hidden; align-items:center; text-align:center;}
-    .score-photo{width:12rem; height:12rem; border-radius:50%; padding:4px; background:#000; overflow:hidden; display:grid; place-items:center;}
-    .score-photo img{width:100%; height:100%; object-fit:cover; border-radius:50%;}
-    .score-photo.rank-1{background-image:linear-gradient(45deg, hsl(210,10%,15%), hsl(210,10%,65%), hsl(210,10%,75%), hsl(210,10%,70%), hsl(210,10%,20%));}
-    .score-photo.rank-2{background-image:linear-gradient(45deg, hsl(40,50%,15%), hsl(40,50%,60%), hsl(40,50%,70%), hsl(40,50%,55%), hsl(30,70%,20%));}
-    .score-photo.rank-3{background-image:linear-gradient(45deg, hsl(30,70%,15%), hsl(30,70%,60%), hsl(30,70%,70%), hsl(30,70%,55%), hsl(30,70%,20%));}
-    .score-amt{font-size:44px; font-weight:900; line-height:1.05; letter-spacing:-.02em;}
-    .score-amt.rank-1{color:var(--rank-1);}
-    .score-amt.rank-2{color:var(--rank-2);}
-    .score-amt.rank-3{color:var(--rank-3);}
-    .score-name{color:var(--muted); font-size:1.5rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase;}
-    .rank-diamond{width:68px; height:68px; border-radius:12px; display:grid; place-items:center; transform:rotate(45deg); box-shadow:var(--shadow-soft); color:var(--black);}
-    .rank-diamond>span{transform:rotate(-45deg); font-weight:800;}
-    .badge.rank-1{background-image:linear-gradient(45deg, hsl(210,10%,15%), hsl(210,10%,65%), hsl(210,10%,75%), hsl(210,10%,70%), hsl(210,10%,20%));}
-    .badge.rank-2{background-image:linear-gradient(45deg, hsl(40,50%,15%), hsl(40,50%,60%), hsl(40,50%,70%), hsl(40,50%,55%), hsl(30,70%,20%));}
-    .badge.rank-3{background-image:linear-gradient(45deg, hsl(30,70%,15%), hsl(30,70%,60%), hsl(30,70%,70%), hsl(30,70%,55%), hsl(30,70%,20%));}
+        .toolbar .group {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
 
-    .card{background:linear-gradient(45deg, hsla(0,0%,12%,.50), hsla(0,0%,12%,.20), hsla(0,0%,12%,.50)); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); color:var(--ink); border-radius:var(--radius); padding:1rem; box-shadow:var(--shadow-soft); border:1px solid var(--border-soft); min-width:0;}
-    .table-wrap{overflow:auto; border-radius:10px;}
-    .table{width:100%; border-collapse:separate; border-spacing:0; margin-top:4px; table-layout:auto; min-width:900px;}
-    col.col-rank{width:1%;}
-    col.col-photo{width:calc(4rem + var(--cell-x));}
-    thead th{position:sticky; top:0; z-index:3; padding:12px var(--cell-x); font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); text-align:left; border-bottom:1px solid var(--border-soft); background:var(--card); white-space:nowrap;}
-    #leaderboardTable tbody td{padding:16px var(--cell-x); border-bottom:1px solid var(--border-soft); font-size:16px; color:var(--ink); background:linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0)); height:60px; box-sizing:border-box; vertical-align:middle;}
-    tbody tr:last-child td{border-bottom:none;}
-    tbody tr:hover{background:var(--row-hover);}
-    .table th:first-child,.table td:first-child{position:sticky; left:0; z-index:4; background:var(--card); box-shadow:2px 0 0 0 var(--border-soft);}
-    .rep-avatar{width:4rem; height:4rem; border-radius:50%; overflow:hidden; display:block; background:#111; border:1px solid rgba(255,255,255,.15);}
-    .rep-avatar img{width:100%; height:100%; object-fit:cover; display:block;}
+        button {
+            border: none;
+            cursor: pointer;
+            border-radius: 999px;
+            padding: .25rem;
+            font-weight: 700;
+            box-shadow: var(--shadow-soft);
+            transition: transform .05s ease, background .15s ease, color .15s ease;
+            color: var(--ink);
+            background: transparent
+        }
 
-    .toast{position:fixed; bottom:16px; right:16px; background:rgba(30,30,30,.95); color:var(--ink); border:1px solid var(--border-soft); padding:10px 14px; border-radius:12px; box-shadow:var(--shadow-soft); display:none; z-index:99999;}
-    .toast.show{display:block;}
+        button:active {
+            transform: translateY(1px) scale(.98)
+        }
 
-    @media (max-width: 720px){
-      body{padding:0 12px;}
-      .brandbar{flex-direction:column; align-items:stretch; gap:12px;}
-      .logo{margin:0 auto;}
-      .toolbar{width:100%; flex-direction:column; align-items:stretch; gap:8px; margin-left:0;}
-      .toolbar .group{width:100%;}
-      .group-range, #date-range{width:100%; display:block;}
-      .drp .drp-field{width:100%!important; min-width:0!important;}
-      .group-actions{width:100%; display:grid; grid-template-columns:repeat(3,1fr); gap:0;}
-      .group-actions button{width:100%!important; height:var(--ctrl-h); border-radius:0;}
-      .group-actions button:first-child{border-top-left-radius:var(--ctrl-r); border-bottom-left-radius:var(--ctrl-r);}
-      .group-actions button:last-child{border-top-right-radius:var(--ctrl-r); border-bottom-right-radius:var(--ctrl-r);}
-      .group-actions .btn-ghost + .btn-ghost{border-left:0;}
-      .scorecards{grid-template-columns:1fr; gap:16px;}
-      .score-photo{width:96px; height:96px;}
-      .score-amt{font-size:48px;}
-      .score-name{font-size:13px; letter-spacing:.14em;}
-      .rep-avatar{width:2rem; height:2rem;}
-      #leaderboardTable tbody td{font-size:14px;}
-    }
-  </style>
+        .btn-primary {
+            background: linear-gradient(45deg, var(--accent-dark-brown), var(--accent-light-gold), var(--accent-cream), var(--accent-gold), var(--accent-bronze));
+            color: var(--black)
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.05)
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--ink)
+        }
+
+        .btn-ghost:hover {
+            background: var(--ghost-hover)
+        }
+
+        .toolbar .group button {
+            height: var(--ctrl-h);
+            width: var(--ctrl-h);
+            border-radius: var(--ctrl-r);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 0
+        }
+
+        .toolbar .group button svg,
+        .drp .drp-trigger svg {
+            width: 1.5rem;
+            height: 1.5rem
+        }
+
+        .spinner {
+            display: none
+        }
+
+        .spinner.show {
+            display: inline-block;
+            margin-left: 6px;
+            border: 2px solid rgba(var(--white-rgb), .15);
+            border-top-color: var(--brand);
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            animation: spin 1s linear infinite;
+            vertical-align: middle
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .drp {
+            --drp-bg: var(--input-bg);
+            --drp-border: var(--border);
+            --drp-ink: var(--ink);
+            --drp-muted: var(--muted);
+            --drp-ring: color-mix(in oklab, var(--accent-gold) 40%, transparent);
+            --drp-selected-bg: var(--accent-gold);
+            --drp-selected-fg: var(--black);
+            --drp-inrange-bg: color-mix(in oklab, var(--accent-gold) 22%, transparent);
+            --drp-today-ring: var(--accent-gold);
+            --drp-cell: 38px;
+            --drp-shadow: var(--shadow-soft)
+        }
+
+        .drp .drp-field {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--drp-bg);
+            color: var(--drp-ink);
+            border: 1px solid var(--drp-border);
+            border-radius: var(--ctrl-r);
+            padding: .25rem;
+            height: var(--ctrl-h);
+            box-shadow: var(--drp-shadow);
+            min-width: 280px
+        }
+
+        .drp .drp-label {
+            display: none !important
+        }
+
+        .drp .drp-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1 1 auto;
+            min-width: 0;
+            justify-content: space-between
+        }
+
+        .drp .drp-text {
+            display: inline-block;
+            background: transparent;
+            border: 0;
+            color: var(--drp-ink);
+            font: inherit;
+            padding: 0;
+            outline: none;
+            pointer-events: none;
+            min-width: 96px;
+            font-size: inherit
+        }
+
+        .drp .drp-sep {
+            opacity: .65
+        }
+
+        .drp .drp-trigger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            color: var(--drp-ink);
+            border-radius: 999px;
+            width: calc(var(--ctrl-h) - 14px);
+            height: calc(var(--ctrl-h) - 14px);
+            cursor: pointer;
+            transition: background 120ms ease, transform 60ms ease
+        }
+
+        .drp .drp-trigger:hover {
+            background: var(--ghost-hover)
+        }
+
+        .drp .drp-popover {
+            position: absolute;
+            z-index: 9999;
+            top: calc(100% + 8px);
+            left: 0;
+            background: rgba(30, 30, 30, .95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--border-soft);
+            border-radius: 24px;
+            box-shadow: var(--shadow-strong);
+            color: var(--drp-ink);
+            width: max-content;
+            opacity: 0;
+            transform: scale(.98);
+            pointer-events: none;
+            transition: opacity 120ms ease, transform 120ms ease
+        }
+
+        .drp .drp-popover.open {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto
+        }
+
+        .drp .drp-popover.is-top {
+            top: auto;
+            bottom: calc(100% + 8px)
+        }
+
+        .drp .drp-surface {
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            padding: 10px;
+            min-width: 300px
+        }
+
+        .drp .drp-head {
+            display: grid;
+            grid-template-columns: 34px 1fr 34px;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px
+        }
+
+        .drp .drp-nav {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--drp-ink);
+            cursor: pointer
+        }
+
+        .drp .drp-nav:hover {
+            background: var(--ghost-hover)
+        }
+
+        .drp .drp-caption {
+            text-align: center;
+            font-weight: 800;
+            letter-spacing: .02em
+        }
+
+        .drp .drp-week {
+            display: grid;
+            grid-template-columns: repeat(7, var(--drp-cell));
+            justify-content: center;
+            gap: 4px;
+            margin: 4px 6px 6px
+        }
+
+        .drp .drp-wd {
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--drp-muted);
+            text-transform: uppercase;
+            letter-spacing: .06em
+        }
+
+        .drp .drp-grid {
+            gap: .5rem;
+            display: grid;
+            grid-template-columns: repeat(7, var(--drp-cell));
+            grid-template-rows: repeat(6, var(--drp-cell));
+            justify-content: center;
+            padding: 4px 6px 8px
+        }
+
+        .drp .drp-day {
+            position: relative;
+            width: var(--drp-cell);
+            height: var(--drp-cell);
+            border-radius: 12px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--drp-ink);
+            font: inherit;
+            cursor: pointer;
+            outline: none;
+            display: grid;
+            place-items: center;
+            user-select: none;
+            transition: background 100ms ease, color 100ms ease, border-color 100ms ease
+        }
+
+        .drp .drp-day:hover {
+            background: var(--ghost-hover)
+        }
+
+        .drp .drp-day:focus-visible {
+            border-color: var(--drp-ring)
+        }
+
+        .drp .drp-day.is-outside {
+            opacity: .5
+        }
+
+        .drp .drp-day.is-today {
+            outline: 2px solid var(--drp-today-ring);
+            outline-offset: 2px;
+            border-radius: 12px
+        }
+
+        .drp .drp-day.is-inrange {
+            background: color-mix(in oklab, var(--drp-selected-bg) 22%, transparent)
+        }
+
+        .drp .drp-day.is-start,
+        .drp .drp-day.is-end {
+            background: var(--drp-selected-bg);
+            color: var(--drp-selected-fg);
+            font-weight: 800
+        }
+
+        .drp .drp-day.is-start::before,
+        .drp .drp-day.is-end::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            box-shadow: inset 0 0 0 1px rgba(var(--black-rgb), .15)
+        }
+
+        .drp .drp-day.is-preview {
+            background: color-mix(in oklab, var(--drp-selected-bg) 28%, transparent)
+        }
+
+        .drp .drp-day.is-preview-edge {
+            background: color-mix(in oklab, var(--drp-selected-bg) 92%, transparent);
+            color: var(--drp-selected-fg);
+            font-weight: 800;
+            box-shadow: inset 0 0 0 1px rgba(var(--black-rgb), .15)
+        }
+
+        .section-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--ink);
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            margin: 2rem 0 16px;
+            box-shadow: none
+        }
+
+        .section-title {
+            margin-top: 6px
+        }
+
+        .scorecards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(240px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .score-card {
+            --card-pad: 2rem;
+            background: linear-gradient(
+                45deg,
+                hsla(0, 0%, 12%, 0.5),
+                hsla(0, 0%, 12%, 0.2),
+                hsla(0, 0%, 0%, 0.5)
+            );
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            color: var(--ink);
+            border-radius: var(--radius);
+            padding: var(--card-pad);
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-soft);
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 1rem;
+            overflow: hidden;
+            align-items: center;
+            text-align: center;
+        }
+
+        .score-photo {
+            width: 12rem;
+            height: 12rem;
+            border-radius: 50%;
+            padding: 4px;
+            background: #000;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+        }
+
+        .score-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .score-photo.rank-1 {
+            background-image: linear-gradient(
+                45deg,
+                hsl(210, 10%, 15%),
+                hsl(210, 10%, 65%),
+                hsl(210, 10%, 75%),
+                hsl(210, 10%, 70%),
+                hsl(210, 10%, 20%)
+            );
+        }
+
+        .score-photo.rank-2 {
+            background-image: linear-gradient(
+                45deg,
+                hsl(40, 50%, 15%),
+                hsl(40, 50%, 60%),
+                hsl(40, 50%, 70%),
+                hsl(40, 50%, 55%),
+                hsl(30, 70%, 20%)
+            );
+        }
+
+        .score-photo.rank-3 {
+            background-image: linear-gradient(
+                45deg,
+                hsl(30, 70%, 15%),
+                hsl(30, 70%, 60%),
+                hsl(30, 70%, 70%),
+                hsl(30, 70%, 55%),
+                hsl(30, 70%, 20%)
+            );
+        }
+
+        .score-amt {
+            font-size: 44px;
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+        }
+
+        .score-amt.rank-1 { color: hsl(210, 90%, 60%); }
+        .score-amt.rank-2 { color: hsl(40, 90%, 60%); }
+        .score-amt.rank-3 { color: hsl(30, 90%, 60%); }
+
+        .score-name {
+            color: var(--muted);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .rank-diamond {
+            width: 68px;
+            height: 68px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            transform: rotate(45deg);
+            box-shadow: var(--shadow-soft);
+            color: var(--black);
+        }
+
+        .rank-diamond > span {
+            transform: rotate(-45deg);
+            font-weight: 800;
+        }
+
+        .rank-diamond.badge.rank-1 {
+            background-image: linear-gradient(
+                45deg,
+                hsl(210, 10%, 15%),
+                hsl(210, 10%, 65%),
+                hsl(210, 10%, 75%),
+                hsl(210, 10%, 70%),
+                hsl(210, 10%, 20%)
+            );
+        }
+
+        .rank-diamond.badge.rank-2 {
+            background-image: linear-gradient(
+                45deg,
+                hsl(40, 50%, 15%),
+                hsl(40, 50%, 60%),
+                hsl(40, 50%, 70%),
+                hsl(40, 50%, 55%),
+                hsl(30, 70%, 20%)
+            );
+        }
+
+        .rank-diamond.badge.rank-3 {
+            background-image: linear-gradient(
+                45deg,
+                hsl(30, 70%, 15%),
+                hsl(30, 70%, 60%),
+                hsl(30, 70%, 70%),
+                hsl(30, 70%, 55%),
+                hsl(30, 70%, 20%)
+            );
+        }
+
+        .card {
+            background: linear-gradient(45deg, hsla(0, 0%, 12%, .50), hsla(0, 0%, 12%, .20), hsla(0, 0%, 12%, .50));
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            color: var(--ink);
+            border-radius: var(--radius);
+            padding: 1rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-soft);
+            min-width: 0
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border-radius: 10px
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 4px;
+            table-layout: auto;
+            min-width: 900px
+        }
+
+        col.col-rank {
+            width: 1%;
+        }
+
+        col.col-photo {
+            width: calc(4rem + var(--cell-x));
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            padding: 12px var(--cell-x);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: var(--muted);
+            text-align: left;
+            border-bottom: 1px solid var(--border-soft);
+            background: var(--card);
+            white-space: nowrap
+        }
+
+        #signupsTable tbody td {
+            padding: 16px var(--cell-x);
+            border-bottom: 1px solid var(--border-soft);
+            font-size: 16px;
+            color: var(--ink);
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+            height: 60px;
+            box-sizing: border-box;
+            vertical-align: middle
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none
+        }
+
+        tbody tr:hover {
+            background: var(--row-hover)
+        }
+
+        #signupsTable th:first-child,
+        #signupsTable td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 4;
+            background: var(--card);
+            box-shadow: 2px 0 0 0 var(--border-soft)
+        }
+
+        .rep-avatar {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            overflow: hidden;
+            display: block;
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, .15);
+        }
+
+        .rep-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            background: rgba(30, 30, 30, .95);
+            color: var(--ink);
+            border: 1px solid var(--border-soft);
+            padding: 10px 14px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-soft);
+            display: none;
+            z-index: 99999
+        }
+
+        .toast.show {
+            display: block
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding: 0 12px
+            }
+
+            .brandbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px
+            }
+
+            .logo {
+                margin: 0 auto
+            }
+
+            .toolbar {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+                margin-left: 0
+            }
+
+            .toolbar .group {
+                width: 100%
+            }
+
+            .group-range,
+            #date-range {
+                width: 100%;
+                display: block
+            }
+
+            .drp .drp-field {
+                width: 100% !important;
+                min-width: 0 !important
+            }
+
+            .group-actions {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0
+            }
+
+            .group-actions button {
+                width: 100% !important;
+                height: var(--ctrl-h);
+                border-radius: 0
+            }
+
+            .group-actions button:first-child {
+                border-top-left-radius: var(--ctrl-r);
+                border-bottom-left-radius: var(--ctrl-r)
+            }
+
+            .group-actions button:last-child {
+                border-top-right-radius: var(--ctrl-r);
+                border-bottom-right-radius: var(--ctrl-r)
+            }
+
+            .group-actions .btn-ghost+.btn-ghost {
+                border-left: 0
+            }
+
+            .scorecards {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .score-photo {
+                width: 96px;
+                height: 96px;
+            }
+
+            .score-amt {
+                font-size: 48px;
+            }
+
+            .score-name {
+                font-size: 13px;
+                letter-spacing: 0.14em;
+            }
+
+            .rep-avatar {
+                width: 2rem;
+                height: 2rem;
+            }
+
+            #signupsTable tbody td {
+                font-size: 14px
+            }
+        }
+
+        thead th {
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s ease;
+            margin-left: 0.5rem;
+        }
+
+        thead th:hover {
+            background: var(--ghost-hover);
+        }
+
+        thead th::after {
+            content: "";
+            font-size: 10px;
+            opacity: 0.7;
+            margin-left: 0.5rem;
+        }
+
+        thead th.sorted-asc::after {
+            content: " ▲";
+            font-size: 10px;
+            opacity: 0.7;
+            margin-left: 0.5rem;
+        }
+
+        thead th.sorted-desc::after {
+            content: " ▼";
+            font-size: 10px;
+            opacity: 0.7;
+            margin-left: 0.5rem;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="brandbar brandbar--with-toolbar">
-      <img class="logo" src="https://storage.googleapis.com/msgsndr/tfaMfEcKzbKeor4FyoMS/media/67d635061b97ac1cbd002603.png" alt="Logo" />
-      <div class="toolbar">
-        <div class="group group-range">
-          <input id="start" type="hidden" />
-          <input id="end" type="hidden" />
-          <div id="date-range" class="drp"></div>
+    <div class="wrap">
+        <div class="brandbar brandbar--with-toolbar">
+            <img class="logo"
+                src="https://storage.googleapis.com/msgsndr/tfaMfEcKzbKeor4FyoMS/media/67d635061b97ac1cbd002603.png"
+                alt="Logo" />
+            <div class="toolbar">
+                <div class="group group-range">
+                    <input id="start" type="hidden" />
+                    <input id="end" type="hidden" />
+                    <div id="date-range" class="drp"></div>
+                </div>
+                <div class="group group-actions">
+                    <button id="applyBtn" class="btn-primary" title="Apply" onclick="applyRange()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3" aria-hidden="true">
+                            <path d="M9 18 L15 12 L9 6" />
+                        </svg>
+                        <span id="spin" class="spinner"></span>
+                    </button>
+                    <button class="btn-ghost" title="Refresh" onclick="refresh()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="currentColor"
+                                d="M13 9v2h7V4h-2v2.74C16.53 5.07 14.4 4 12 4c-2.21 0-4.21.9-5.66 2.34S4 9.79 4 12c0 4.42 3.58 8 8 8 2.21 0 4.21-.9 5.66-2.34l-1.42-1.42A5.98 5.98 0 0 1 12 18c-3.31 0-6-2.69-6-6 0-1.65.67-3.15 1.76-4.24A5.98 5.98 0 0 1 12 6a6.01 6.01 0 0 1 5.19 3H13z" />
+                        </svg>
+                    </button>
+                    <button class="btn-ghost" title="Download PDF" onclick="downloadPdf()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="currentColor"
+                                d="M4 15h2v3h12v-3h2v3c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2m11.59-8.41L13 12.17V4h-2v8.17L8.41 9.59 7 11l5 5 5-5-1.41-1.41z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="group group-actions">
-          <button id="applyBtn" class="btn-primary" title="Apply" onclick="applyRange()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
-              <path d="M9 18 L15 12 L9 6" />
-            </svg>
-            <span id="spin" class="spinner"></span>
-          </button>
 
-          <button class="btn-ghost" title="Refresh" onclick="refresh()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M13 9v2h7V4h-2v2.74C16.53 5.07 14.4 4 12 4c-2.21 0-4.21.9-5.66 2.34S4 9.79 4 12c0 4.42 3.58 8 8 8 2.21 0 4.21-.9 5.66-2.34l-1.42-1.42A5.98 5.98 0 0 1 12 18c-3.31 0-6-2.69-6-6 0-1.65.67-3.15 1.76-4.24A5.98 5.98 0 0 1 12 6a6.01 6.01 0 0 1 5.19 3H13z"/>
-            </svg>
-          </button>
+        <h2 class="section-title">MITA Leaderboard</h2>
+        <div id="scorecards" class="scorecards"></div>
 
-          <button class="btn-ghost" title="Download PDF" onclick="downloadLeaderboardPdf()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M4 15h2v3h12v-3h2v3c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2m11.59-8.41L13 12.17V4h-2v8.17L8.41 9.59 7 11l5 5 5-5-1.41-1.41z"/>
-            </svg>
-          </button>
+        <div class="card wide" style="margin-top:8px;">
+            <div class="table-wrap">
+                <table class="table" id="signupsTable">
+                    <colgroup>
+                        <col class="col-rank">
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)">#</th>
+                            <th onclick="sortTable(1)">Sales Rep</th>
+                            <th onclick="sortTable(2)">Cash Collected</th>
+                            <th onclick="sortTable(3)">Avg. Cash / Deal</th>
+                            <th onclick="sortTable(4)">Gross Revenue</th>
+                            <th onclick="sortTable(5)">Tickets Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
         </div>
-      </div>
     </div>
 
-    <!-- Scorecards -->
-    <div id="scorecards" class="scorecards"></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <!-- Leaderboard -->
-    <div class="card wide" style="margin-top:16px;">
-      <div class="table-wrap">
-        <table class="table" id="leaderboardTable">
-          <colgroup>
-            <col class="col-rank" />
-            <col class="col-photo" />
-            <col class="col-name" />
-            <col class="col-cash" />
-            <col class="col-avg" />
-            <col class="col-gross" />
-            <col class="col-tickets" />
-          </colgroup>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th colspan="2">Sales Rep</th>
-              <th>Cash Collected</th>
-              <th>Avg. Cash Per Deal</th>
-              <th>Gross Revenue</th>
-              <th>Ticket Count</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+    <script>
+        const GAS_URL = '/api/getLeaderboard';
+    </script>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script>
+        (function () {
+            const clamp = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+            const startOfMonth = d => new Date(d.getFullYear(), d.getMonth(), 1);
+            const addMonths = (d, n) => new Date(d.getFullYear(), d.getMonth() + n, 1);
+            const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+            const isSameDay = (a, b) => !!(a && b) && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
-  <!-- Date Range Picker (arrow-nav + anchored/flip + NEW live preview) -->
-  <script>
-    (function () {
-      const clamp = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-      const startOfMonth = (d) => new Date(d.getFullYear(), d.getMonth(), 1);
-      const addMonths = (d, n) => new Date(d.getFullYear(), d.getMonth() + n, 1);
-      const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
-      const isSameDay = (a, b) => !!(a && b) && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-
-      class DateRangePicker {
-        constructor(root, opts = {}) {
-          if (!root) throw new Error("DateRangePicker: root element required");
-          this.root = root;
-          this.opts = Object.assign({ mode: 'range', value: undefined, locale: 'en-US', firstDayOfWeek: 0, onChange: undefined, onOpenChange: undefined }, opts);
-
-          this.formatter = new Intl.DateTimeFormat(this.opts.locale || 'en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
-          this.monthFormatter = new Intl.DateTimeFormat(this.opts.locale || 'en-US', { month: 'long', year: 'numeric' });
-          this.weekdayFormatter = new Intl.DateTimeFormat(this.opts.locale || 'en-US', { weekday: 'short' });
-
-          this.state = { open: false, cursor: clamp(this._initialCursor()), start: undefined, end: undefined, preview: undefined, focusDay: undefined, single: this.opts.mode === 'single' };
-          if (this.state.single) {
-            if (this.opts.value instanceof Date) { const v = clamp(this.opts.value); this.state.start = v; this.state.end = v; this.state.cursor = startOfMonth(v); }
-          } else if (this.opts.value && (this.opts.value.start || this.opts.value.end)) {
-            if (this.opts.value.start) this.state.start = clamp(this.opts.value.start);
-            if (this.opts.value.end) this.state.end = clamp(this.opts.value.end);
-            if (this.state.start) this.state.cursor = startOfMonth(this.state.start);
-            else if (this.state.end) this.state.cursor = startOfMonth(this.state.end);
-          }
-
-          this._render();
-          this._announceMonth();
-          this._updateFieldTexts();
-          this._emitChange();
-        }
-
-        /* positioning (unchanged) */
-        _positionPopover() {
-          const field = this.root.querySelector('.drp-field');
-          const pop = this.el?.pop;
-          if (!field || !pop) return;
-          pop.classList.remove('is-top');
-          const rect = field.getBoundingClientRect();
-          const popH = pop.offsetHeight || 320;
-          const spaceBelow = window.innerHeight - rect.bottom;
-          const spaceAbove = rect.top;
-          if (spaceBelow < popH + 16 && spaceAbove > popH + 16) pop.classList.add('is-top');
-        }
-
-        open(){ if(!this.state.open){ this.state.open = true; this._syncOpen(); this._positionPopover(); } }
-        close(){ if(this.state.open){ this.state.open = false; this._syncOpen(); } }
-        getValue(){ return this.state.single ? this.state.start : { start:this.state.start, end:this.state.end }; }
-        setValue(v){
-          if (this.state.single){
-            const d = v instanceof Date ? clamp(v) : undefined;
-            this.state.start = d; this.state.end = d;
-            if (d) this.state.cursor = startOfMonth(d);
-          } else {
-            const s = v && v.start ? clamp(v.start) : undefined;
-            const e = v && v.end ? clamp(v.end) : undefined;
-            this.state.start = s; this.state.end = e;
-            if (s) this.state.cursor = startOfMonth(s);
-            else if (e) this.state.cursor = startOfMonth(e);
-          }
-          this.state.preview = undefined;
-          this._rerenderGrid();
-          this._updateFieldTexts();
-          this._emitChange();
-        }
-        destroy(){
-          this.root.innerHTML="";
-          this._removeListeners && this._removeListeners();
-        }
-
-        _initialCursor(){
-          if (this.opts.value){
-            if (this.opts.mode==='single' && this.opts.value instanceof Date) return startOfMonth(this.opts.value);
-            if (this.opts.value.start) return startOfMonth(this.opts.value.start);
-            if (this.opts.value.end) return startOfMonth(this.opts.value.end);
-          }
-          return startOfMonth(new Date());
-        }
-
-        _render(){
-          this.root.setAttribute("role","group");
-          this.root.classList.add("drp");
-          this.root.innerHTML = `
+            class DateRangePicker {
+                constructor(root, opts = {}) {
+                    if (!root) throw new Error("DateRangePicker root required");
+                    this.root = root;
+                    this.opts = Object.assign({ mode: "range", value: undefined, locale: "en-US", firstDayOfWeek: 0, onChange: undefined, onOpenChange: undefined }, opts);
+                    this.formatter = new Intl.DateTimeFormat(this.opts.locale || "en-US", { month: "2-digit", day: "2-digit", year: "numeric" });
+                    this.monthFormatter = new Intl.DateTimeFormat(this.opts.locale || "en-US", { month: "long", year: "numeric" });
+                    this.weekdayFormatter = new Intl.DateTimeFormat(this.opts.locale || "en-US", { weekday: "short" });
+                    this.state = { open: false, cursor: clamp(this._initialCursor()), start: undefined, end: undefined, preview: undefined, focusDay: undefined, single: this.opts.mode === "single" };
+                    if (this.state.single) {
+                        if (this.opts.value instanceof Date) { const v = clamp(this.opts.value); this.state.start = v; this.state.end = v; this.state.cursor = startOfMonth(v) }
+                    } else if (this.opts.value && (this.opts.value.start || this.opts.value.end)) {
+                        if (this.opts.value.start) this.state.start = clamp(this.opts.value.start);
+                        if (this.opts.value.end) this.state.end = clamp(this.opts.value.end);
+                        if (this.state.start) this.state.cursor = startOfMonth(this.state.start);
+                        else if (this.state.end) this.state.cursor = startOfMonth(this.state.end);
+                    }
+                    this._render(); this._announceMonth(); this._updateFieldTexts(); this._emitChange();
+                }
+                _positionPopover() {
+                    const field = this.root.querySelector(".drp-field"); const pop = this.el?.pop;
+                    if (!field || !pop) return; pop.classList.remove("is-top");
+                    const rect = field.getBoundingClientRect(); const popH = pop.offsetHeight || 320;
+                    const spaceBelow = window.innerHeight - rect.bottom; const spaceAbove = rect.top;
+                    if (spaceBelow < popH + 16 && spaceAbove > popH + 16) pop.classList.add("is-top");
+                }
+                open() { if (!this.state.open) { this.state.open = true; this._syncOpen(); this._positionPopover(); } }
+                close() { if (this.state.open) { this.state.open = false; this._syncOpen(); } }
+                getValue() { return this.state.single ? this.state.start : { start: this.state.start, end: this.state.end } }
+                setValue(v) {
+                    if (this.state.single) {
+                        const d = v instanceof Date ? clamp(v) : undefined; this.state.start = d; this.state.end = d; if (d) this.state.cursor = startOfMonth(d);
+                    } else {
+                        const s = v && v.start ? clamp(v.start) : undefined; const e = v && v.end ? clamp(v.end) : undefined;
+                        this.state.start = s; this.state.end = e; if (s) this.state.cursor = startOfMonth(s); else if (e) this.state.cursor = startOfMonth(e);
+                    }
+                    this.state.preview = undefined; this._rerenderGrid(); this._updateFieldTexts(); this._emitChange();
+                }
+                destroy() { this.root.innerHTML = ""; this._removeListeners && this._removeListeners(); }
+                _initialCursor() {
+                    if (this.opts.value) {
+                        if (this.opts.mode === "single" && this.opts.value instanceof Date) return startOfMonth(this.opts.value);
+                        if (this.opts.value.start) return startOfMonth(this.opts.value.start);
+                        if (this.opts.value.end) return startOfMonth(this.opts.value.end);
+                    }
+                    return startOfMonth(new Date());
+                }
+                _render() {
+                    this.root.setAttribute("role", "group"); this.root.classList.add("drp");
+                    this.root.innerHTML = `
             <div class="drp-field" aria-label="Date range selector">
               <div class="drp-display" tabindex="0" aria-haspopup="dialog" aria-expanded="false">
                 <span class="drp-text" id="drp-start-text">—</span>
@@ -339,7 +966,6 @@
                   <path d="M16 2v4M8 2v4M3 10h18"></path>
                 </svg>
               </button>
-
               <div class="drp-popover" role="dialog" aria-modal="true" aria-label="Choose date range">
                 <span class="drp-sentinel" tabindex="0" data-sentinel="start"></span>
                 <div class="drp-surface">
@@ -359,440 +985,426 @@
                 <span class="drp-sentinel" tabindex="0" data-sentinel="end"></span>
                 <div class="drp-live" aria-live="polite" id="drp-live"></div>
               </div>
-            </div>
-          `;
-
-          this.el = {
-            display: this.root.querySelector(".drp-display"),
-            startText: this.root.querySelector("#drp-start-text"),
-            endText: this.root.querySelector("#drp-end-text"),
-            trigger: this.root.querySelector(".drp-trigger"),
-            pop: this.root.querySelector(".drp-popover"),
-            caption: this.root.querySelector("#drp-caption"),
-            week: this.root.querySelector(".drp-week"),
-            grid: this.root.querySelector(".drp-grid"),
-            err: this.root.querySelector("#drp-error"),
-            live: this.root.querySelector("#drp-live"),
-            sentinels: this.root.querySelectorAll(".drp-sentinel")
-          };
-
-          this._renderWeekdays();
-          this._rerenderGrid();
-          this._bind();
-        }
-
-        _bind(){
-          const openWithKeyboard = (ev) => {
-            const k = ev.key;
-            if (k==="Enter" || k===" " || k==="ArrowDown"){ ev.preventDefault(); this.open(); this._focusInitialDay(); }
-          };
-          const toggleOpen = () => { this.state.open ? this.close() : this.open(); if (this.state.open) { this._focusInitialDay(); this._positionPopover(); } };
-
-          this.el.display.addEventListener("click", toggleOpen);
-          this.el.display.addEventListener("keydown", openWithKeyboard);
-          this.el.trigger.addEventListener("click", toggleOpen);
-          this.el.trigger.addEventListener("keydown", openWithKeyboard);
-
-          // arrow nav
-          this.el.pop.querySelectorAll("[data-nav]").forEach((btn)=>{
-            btn.addEventListener("click", (ev)=>{
-              ev.preventDefault(); ev.stopPropagation();
-              const delta = Number(btn.getAttribute("data-nav"));
-              this.state.cursor = addMonths(this.state.cursor, delta);
-              this._rerenderGrid(); this._announceMonth();
-              this._moveFocusTo(new Date(this.state.cursor.getFullYear(), this.state.cursor.getMonth(), 1));
-              this._positionPopover();
-            });
-          });
-
-          this._onPopKeydown = (e) => {
-            if (!this.state.open) return;
-            const k = e.key;
-            if (k==="Escape"){ e.preventDefault(); this.close(); this.el.display.focus(); return; }
-
-            const focusable = this._focusables();
-            if (k==="Tab"){
-              if (focusable.length){
-                const idx = focusable.indexOf(document.activeElement);
-                if (e.shiftKey && (idx===0)){ e.preventDefault(); focusable[focusable.length-1].focus(); }
-                else if (!e.shiftKey && (idx===focusable.length-1)){ e.preventDefault(); focusable[0].focus(); }
-              }
-              return;
-            }
-
-            const dayBtn = document.activeElement?.getAttribute?.("role")==="gridcell" ? document.activeElement : null;
-            if (!dayBtn) return;
-
-            let targetDate = this.state.focusDay || this._firstOfMonthFocusable();
-            if (!targetDate) targetDate = new Date(this.state.cursor);
-
-            if (k==="ArrowLeft"){ e.preventDefault(); this._moveFocusTo(addDays(targetDate, -1)); }
-            else if (k==="ArrowRight"){ e.preventDefault(); this._moveFocusTo(addDays(targetDate, 1)); }
-            else if (k==="ArrowUp"){ e.preventDefault(); this._moveFocusTo(addDays(targetDate, -7)); }
-            else if (k==="ArrowDown"){ e.preventDefault(); this._moveFocusTo(addDays(targetDate, 7)); }
-            else if (k==="Home"){ e.preventDefault(); const dow=(targetDate.getDay()-this.opts.firstDayOfWeek+7)%7; this._moveFocusTo(addDays(targetDate, -dow)); }
-            else if (k==="End"){ e.preventDefault(); const dow=(targetDate.getDay()-this.opts.firstDayOfWeek+7)%7; this._moveFocusTo(addDays(targetDate, 6-dow)); }
-            else if (k==="PageUp"){ e.preventDefault(); this.state.cursor=addMonths(this.state.cursor,-1); this._rerenderGrid(); this._moveFocusTo(addDays(targetDate,-30)); this._announceMonth(); this._positionPopover(); }
-            else if (k==="PageDown"){ e.preventDefault(); this.state.cursor=addMonths(this.state.cursor,1); this._rerenderGrid(); this._moveFocusTo(addDays(targetDate,30)); this._announceMonth(); this._positionPopover(); }
-            else if (k==="Enter" || k===" "){ e.preventDefault(); dayBtn.click(); }
-          };
-          document.addEventListener("keydown", this._onPopKeydown, true);
-
-          this._onDocClick = (e) => { if (!this.state.open) return; if (this.root.contains(e.target)) return; this.close(); };
-          document.addEventListener("mousedown", this._onDocClick);
-
-          // re-position on viewport changes
-          this._onViewportChange = () => this._positionPopover();
-          window.addEventListener('resize', this._onViewportChange, { passive: true });
-          window.addEventListener('scroll', this._onViewportChange, { passive: true });
-
-          this.el.sentinels.forEach(s=>{
-            s.addEventListener("focus", ()=>{
-              const f = this._focusables();
-              if (s.dataset.sentinel==="start") f[f.length-1]?.focus();
-              else f[0]?.focus();
-            });
-          });
-
-          this._removeListeners = () => {
-            document.removeEventListener("keydown", this._onPopKeydown, true);
-            document.removeEventListener("mousedown", this._onDocClick);
-            window.removeEventListener('resize', this._onViewportChange);
-            window.removeEventListener('scroll', this._onViewportChange);
-          };
-        }
-
-        _syncOpen(){ this.el.pop.classList.toggle("open", this.state.open); this.el.display.setAttribute("aria-expanded", String(this.state.open)); if (typeof this.opts.onOpenChange==="function") this.opts.onOpenChange(this.state.open); }
-        _renderWeekdays(){
-          const base = new Date(2023,0,1);
-          const order = [...Array(7).keys()].map(i=>(i+this.opts.firstDayOfWeek)%7);
-          this.el.week.innerHTML = order.map((dow)=>{ const d=addDays(base,dow); return `<div class="drp-wd">${this.weekdayFormatter.format(d).slice(0,2)}</div>`; }).join("");
-        }
-        _daysForGrid(monthDate){
-          const first = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
-          const startOffset = (first.getDay() - this.opts.firstDayOfWeek + 7) % 7;
-          const gridStart = addDays(first, -startOffset);
-          const days = []; for (let i=0;i<42;i++) days.push(addDays(gridStart, i)); return days;
-        }
-
-        _rerenderGrid(){
-          const month = this.state.cursor;
-          this.el.caption.textContent = this.monthFormatter.format(month);
-          const days = this._daysForGrid(month);
-
-          const inRange = (d)=>{ if(!this.state.start || !this.state.end) return false; const t=d.getTime(), a=this.state.start.getTime(), b=this.state.end.getTime(); return t>Math.min(a,b) && t<Math.max(a,b); };
-          const previewRange = (d)=>{ if(!this.state.start || this.state.end || !this.state.preview) return false; const t=d.getTime(), a=this.state.start.getTime(), b=this.state.preview.getTime(); return t>Math.min(a,b) && t<Math.max(a,b); };
-          const today = clamp(new Date());
-
-          const html = days.map(d=>{
-            const outside = d.getMonth()!==month.getMonth();
-            const isStart = this.state.start && isSameDay(d, this.state.start);
-            const isEnd = this.state.end && isSameDay(d, this.state.end);
-            const isIn = inRange(d);
-            const isPrev = previewRange(d);
-            const isToday = isSameDay(d, today);
-            const classes = ["drp-day"];
-            if (outside) classes.push("is-outside");
-            if (isIn) classes.push("is-inrange");
-            if (isPrev) classes.push("is-preview");
-            if (isStart) classes.push("is-start");
-            if (isEnd) classes.push("is-end");
-            if (isToday) classes.push("is-today");
-            const ariaSelected = (isStart || isEnd) ? "true" : "false";
-            const label = this.formatter.format(d);
-            return `<button class="${classes.join(" ")}" role="gridcell" data-date="${d.toISOString()}" aria-selected="${ariaSelected}" aria-label="${label}" type="button">${d.getDate()}</button>`;
-          }).join("");
-
-          this.el.grid.innerHTML = html;
-
-          // listeners par jour — uniquement mouseenter + click (pas de mouseleave par bouton)
-          this.el.grid.querySelectorAll(".drp-day").forEach(btn=>{
-            const date = new Date(btn.dataset.date);
-            btn.addEventListener("mouseenter", ()=>{
-              if (this.state.start && !this.state.end){
-                this.state.preview = clamp(date);
-                this._applyPreviewClasses();
-              }
-            });
-            btn.addEventListener("click", ()=>{ this._selectDate(date); });
-          });
-
-          // on efface la preview seulement quand on sort de toute la grille
-          if (!this._gridMouseleaveBound){
-            this.el.grid.addEventListener("mouseleave", ()=>{
-              if (!this.state.end){
-                this.state.preview = undefined;
-                this._applyPreviewClasses();
-              }
-            });
-            this._gridMouseleaveBound = true;
-          }
-
-          if (this.state.open) this._positionPopover();
-        }
-
-        /* >>> NEW: preview highlight that follows the cursor */
-        _applyPreviewClasses() {
-          // Nettoyage
-          this.el.grid.querySelectorAll(".drp-day").forEach(btn => {
-            btn.classList.remove("is-preview", "is-preview-edge");
-          });
-
-          // Pas de preview si pas de start, ou si end déjà fixé
-          if (!this.state.preview || !this.state.start || this.state.end) return;
-
-          const a = this.state.start.getTime();
-          const b = this.state.preview.getTime();
-          const min = Math.min(a, b);
-          const max = Math.max(a, b);
-
-          this.el.grid.querySelectorAll(".drp-day").forEach(btn => {
-            const t = new Date(btn.dataset.date).getTime();
-            if (t > min && t < max) {
-              btn.classList.add("is-preview");
-            }
-            if (t === b) {
-              btn.classList.add("is-preview-edge");
-            }
-          });
-        }
-
-        _selectDate(date){
-          const d = clamp(date);
-          if (!this.state.start || (this.state.start && this.state.end)){
-            this.state.start = d; this.state.end = undefined; this.state.preview = undefined;
-            this._rerenderGrid(); this._updateFieldTexts(); this._emitChange(); return;
-          }
-          if (d.getTime() < this.state.start.getTime()){ this.state.end = this.state.start; this.state.start = d; }
-          else { this.state.end = d; }
-          this.state.preview = undefined;
-          this._finishSelection(true);
-        }
-
-        _finishSelection(closeAfter){ this._rerenderGrid(); this._updateFieldTexts(); this._emitChange(); if (closeAfter){ this.close(); this.el.display.focus(); } }
-        _updateFieldTexts(){ const fmt=(d)=> d ? this.formatter.format(d) : "—"; this.el.startText.textContent = fmt(this.state.start); this.el.endText.textContent = fmt(this.state.end); }
-        _announceMonth(){ this.el.live.textContent = this.monthFormatter.format(this.state.cursor); }
-        _emitChange(){
-          const toISO = (d)=> d ? new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString().slice(0,10) : "";
-          const s = document.getElementById('start'); const e = document.getElementById('end');
-          if (s) s.value = toISO(this.state.start);
-          if (e) e.value = toISO(this.state.end);
-          if (typeof this.opts.onChange === "function") this.opts.onChange({ start:this.state.start, end:this.state.end });
-        }
-        _firstOfMonthFocusable(){ return new Date(this.state.cursor.getFullYear(), this.state.cursor.getMonth(), 1); }
-        _moveFocusTo(date){
-          const m = this.state.cursor.getMonth();
-          if (date.getMonth()!==m || date.getFullYear()!==this.state.cursor.getFullYear()){
-            this.state.cursor = new Date(date.getFullYear(), date.getMonth(), 1);
-            this._rerenderGrid();
-          }
-          const iso = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())).toISOString().slice(0,10);
-          const btn = Array.from(this.el.grid.querySelectorAll(".drp-day")).find(b => b.dataset.date.slice(0,10)===iso);
-          if (btn){ this.state.focusDay = clamp(date); btn.focus(); }
-        }
-        _focusInitialDay(){ let target = this.state.start || this._firstOfMonthFocusable(); if (!target) return; this._moveFocusTo(target); }
-        _focusables(){ return Array.from(this.el.pop.querySelectorAll("button:not([disabled])")); }
-      }
-
-      window.DateRangePicker = DateRangePicker;
-    })();
-
-    (function initDRP(){
-      const today = new Date();
-      const first = new Date(today.getFullYear(), today.getMonth(), 1);
-      const last  = new Date(today.getFullYear(), today.getMonth()+1, 0);
-
-      const drp = new DateRangePicker(document.getElementById('date-range'), {
-        mode: 'range',
-        value: { start:first, end:last },
-        locale: 'en-US',
-        firstDayOfWeek: 0,
-        onChange: ({start, end})=>{
-          const iso = d => d ? new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString().slice(0,10) : '';
-          const s = document.getElementById('start'); const e = document.getElementById('end');
-          if (s) s.value = iso(start);
-          if (e) e.value = iso(end);
-        }
-      });
-      window._drp = drp;
-
-      const s = document.getElementById('start'); const e = document.getElementById('end');
-      const toISO = d => new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString().slice(0,10);
-      if (s) s.value = toISO(first);
-      if (e) e.value = toISO(last);
-    })();
-  </script>
-
-  <!-- Data + rendering (unchanged except for __DATA__ init and requestData fetch) -->
-  <script>
-    // ==== MINIMAL CHANGE: no server-side template on Vercel; keep __DATA__ null so we always fetch
-    const __DATA__ = null;
-
-    const money = (n) => new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:0 }).format(Number(n||0));
-    const toast = (msg, t=2600) => { const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), t); };
-
-    function render(data){
-      try{
-        const top3 = (data?.top3 || []).slice(0,3);
-        const leaderboard = Array.isArray(data?.leaderboard) ? data.leaderboard : [];
-
-        const sc = document.getElementById('scorecards');
-        sc.innerHTML = top3.map((p,i)=>{
-          const rank = i+1;
-          const rankClass = rank===1 ? 'rank-1' : rank===2 ? 'rank-2' : 'rank-3';
-          const avatar = p.avatar || 'https://via.placeholder.com/150/808080/FFFFFF?text=MIA';
-          return `
-            <div class="score-card">
-              <div class="score-photo ${rankClass}"><img src="${avatar}" alt="${p.closer || 'Rep'}"></div>
-              <div class="score-amt ${rankClass}">${money(p.totalCashCollected || 0)}</div>
-              <div class="score-name">${String(p.closer || '').toUpperCase()}</div>
-              <div class="rank-diamond badge ${rankClass}"><span>${rank}${rank===1?'st':rank===2?'nd':'rd'}</span></div>
             </div>`;
-        }).join('');
+                    this.el = {
+                        display: this.root.querySelector(".drp-display"),
+                        startText: this.root.querySelector("#drp-start-text"),
+                        endText: this.root.querySelector("#drp-end-text"),
+                        trigger: this.root.querySelector(".drp-trigger"),
+                        pop: this.root.querySelector(".drp-popover"),
+                        caption: this.root.querySelector("#drp-caption"),
+                        week: this.root.querySelector(".drp-week"),
+                        grid: this.root.querySelector(".drp-grid"),
+                        err: this.root.querySelector("#drp-error"),
+                        live: this.root.querySelector("#drp-live"),
+                        sentinels: this.root.querySelectorAll(".drp-sentinel")
+                    };
+                    this._renderWeekdays(); this._rerenderGrid(); this._bind();
+                }
+                _bind() {
+                    const openWithKeyboard = (ev) => { const k = ev.key; if (k === "Enter" || k === " " || k === "ArrowDown") { ev.preventDefault(); this.open(); this._focusInitialDay(); } };
+                    const toggleOpen = () => { this.state.open ? this.close() : this.open(); if (this.state.open) { this._focusInitialDay(); this._positionPopover(); } };
+                    this.el.display.addEventListener("click", toggleOpen);
+                    this.el.display.addEventListener("keydown", openWithKeyboard);
+                    this.el.trigger.addEventListener("click", toggleOpen);
+                    this.el.trigger.addEventListener("keydown", openWithKeyboard);
+                    this.el.pop.querySelectorAll("[data-nav]").forEach(btn => {
+                        btn.addEventListener("click", (ev) => {
+                            ev.preventDefault(); ev.stopPropagation();
+                            const delta = Number(btn.getAttribute("data-nav"));
+                            this.state.cursor = addMonths(this.state.cursor, delta);
+                            this._rerenderGrid(); this._announceMonth();
+                            this._moveFocusTo(new Date(this.state.cursor.getFullYear(), this.state.cursor.getMonth(), 1));
+                            this._positionPopover();
+                        });
+                    });
+                    this._onPopKeydown = (e) => {
+                        if (!this.state.open) return;
+                        const k = e.key;
+                        if (k === "Escape") { e.preventDefault(); this.close(); this.el.display.focus(); return; }
+                        const focusable = this._focusables();
+                        if (k === "Tab") {
+                            if (focusable.length) {
+                                const idx = focusable.indexOf(document.activeElement);
+                                if (e.shiftKey && (idx === 0)) { e.preventDefault(); focusable[focusable.length - 1].focus(); }
+                                else if (!e.shiftKey && (idx === focusable.length - 1)) { e.preventDefault(); focusable[0].focus(); }
+                            }
+                            return;
+                        }
+                        const dayBtn = document.activeElement?.getAttribute?.("role") === "gridcell" ? document.activeElement : null;
+                        if (!dayBtn) return;
+                        let targetDate = this.state.focusDay || this._firstOfMonthFocusable();
+                        if (!targetDate) targetDate = new Date(this.state.cursor);
+                        if (k === "ArrowLeft") { e.preventDefault(); this._moveFocusTo(addDays(targetDate, -1)); }
+                        else if (k === "ArrowRight") { e.preventDefault(); this._moveFocusTo(addDays(targetDate, 1)); }
+                        else if (k === "ArrowUp") { e.preventDefault(); this._moveFocusTo(addDays(targetDate, -7)); }
+                        else if (k === "ArrowDown") { e.preventDefault(); this._moveFocusTo(addDays(targetDate, 7)); }
+                        else if (k === "Home") { e.preventDefault(); const dow = (targetDate.getDay() - this.opts.firstDayOfWeek + 7) % 7; this._moveFocusTo(addDays(targetDate, -dow)); }
+                        else if (k === "End") { e.preventDefault(); const dow = (targetDate.getDay() - this.opts.firstDayOfWeek + 7) % 7; this._moveFocusTo(addDays(targetDate, 6 - dow)); }
+                        else if (k === "PageUp") { e.preventDefault(); this.state.cursor = addMonths(this.state.cursor, -1); this._rerenderGrid(); this._moveFocusTo(addDays(targetDate, -30)); this._announceMonth(); this._positionPopover(); }
+                        else if (k === "PageDown") { e.preventDefault(); this.state.cursor = addMonths(this.state.cursor, 1); this._rerenderGrid(); this._moveFocusTo(addDays(targetDate, 30)); this._announceMonth(); this._positionPopover(); }
+                        else if (k === "Enter" || k === " ") { e.preventDefault(); dayBtn.click(); }
+                    };
+                    document.addEventListener("keydown", this._onPopKeydown, true);
+                    this._onDocClick = (e) => { if (!this.state.open) return; if (this.root.contains(e.target)) return; this.close(); };
+                    document.addEventListener("mousedown", this._onDocClick);
+                    this._onViewportChange = () => this._positionPopover();
+                    window.addEventListener("resize", this._onViewportChange, { passive: true });
+                    window.addEventListener("scroll", this._onViewportChange, { passive: true });
+                    this.el.sentinels.forEach(s => {
+                        s.addEventListener("focus", () => {
+                            const f = this._focusables();
+                            if (s.dataset.sentinel === "start") f[f.length - 1]?.focus(); else f[0]?.focus();
+                        });
+                    });
+                    this._removeListeners = () => {
+                        document.removeEventListener("keydown", this._onPopKeydown, true);
+                        document.removeEventListener("mousedown", this._onDocClick);
+                        window.removeEventListener("resize", this._onViewportChange);
+                        window.removeEventListener("scroll", this._onViewportChange);
+                    };
+                }
+                _syncOpen() { this.el.pop.classList.toggle("open", this.state.open); this.el.display.setAttribute("aria-expanded", String(this.state.open)); if (typeof this.opts.onOpenChange === "function") this.opts.onOpenChange(this.state.open); }
+                _renderWeekdays() {
+                    const base = new Date(2023, 0, 1);
+                    const order = [...Array(7).keys()].map(i => (i + this.opts.firstDayOfWeek) % 7);
+                    this.el.week.innerHTML = order.map(dow => { const d = addDays(base, dow); return `<div class="drp-wd">${this.weekdayFormatter.format(d).slice(0, 2)}</div>`; }).join("");
+                }
+                _daysForGrid(monthDate) {
+                    const first = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
+                    const startOffset = (first.getDay() - this.opts.firstDayOfWeek + 7) % 7;
+                    const gridStart = addDays(first, -startOffset);
+                    const days = []; for (let i = 0; i < 42; i++) days.push(addDays(gridStart, i)); return days;
+                }
+                _rerenderGrid() {
+                    const month = this.state.cursor;
+                    this.el.caption.textContent = this.monthFormatter.format(month);
+                    const days = this._daysForGrid(month);
+                    const inRange = (d) => { if (!this.state.start || !this.state.end) return false; const t = d.getTime(), a = this.state.start.getTime(), b = this.state.end.getTime(); return t > Math.min(a, b) && t < Math.max(a, b); };
+                    const previewRange = (d) => { if (!this.state.start || this.state.end || !this.state.preview) return false; const t = d.getTime(), a = this.state.start.getTime(), b = this.state.preview.getTime(); return t > Math.min(a, b) && t < Math.max(a, b); };
+                    const today = clamp(new Date());
+                    const html = days.map(d => {
+                        const outside = d.getMonth() !== month.getMonth();
+                        const isStart = this.state.start && isSameDay(d, this.state.start);
+                        const isEnd = this.state.end && isSameDay(d, this.state.end);
+                        const isIn = inRange(d);
+                        const isPrev = previewRange(d);
+                        const isToday = isSameDay(d, today);
+                        const classes = ["drp-day"]; if (outside) classes.push("is-outside"); if (isIn) classes.push("is-inrange"); if (isPrev) classes.push("is-preview"); if (isStart) classes.push("is-start"); if (isEnd) classes.push("is-end"); if (isToday) classes.push("is-today");
+                        const ariaSelected = (isStart || isEnd) ? "true" : "false";
+                        const label = this.formatter.format(d);
+                        return `<button class="${classes.join(" ")}" role="gridcell" data-date="${d.toISOString()}" aria-selected="${ariaSelected}" aria-label="${label}" type="button">${d.getDate()}</button>`;
+                    }).join("");
+                    this.el.grid.innerHTML = html;
+                    this.el.grid.querySelectorAll(".drp-day").forEach(btn => {
+                        const date = new Date(btn.dataset.date);
+                        btn.addEventListener("mouseenter", () => { if (this.state.start && !this.state.end) { this.state.preview = clamp(date); this._applyPreviewClasses(); } });
+                        btn.addEventListener("click", () => { this._selectDate(date); });
+                    });
+                    if (!this._gridMouseleaveBound) {
+                        this.el.grid.addEventListener("mouseleave", () => { if (!this.state.end) { this.state.preview = undefined; this._applyPreviewClasses(); } });
+                        this._gridMouseleaveBound = true;
+                    }
+                    if (this.state.open) this._positionPopover();
+                }
+                _applyPreviewClasses() {
+                    this.el.grid.querySelectorAll(".drp-day").forEach(btn => { btn.classList.remove("is-preview", "is-preview-edge") });
+                    if (!this.state.preview || !this.state.start || this.state.end) return;
+                    const a = this.state.start.getTime(); const b = this.state.preview.getTime();
+                    const min = Math.min(a, b); const max = Math.max(a, b);
+                    this.el.grid.querySelectorAll(".drp-day").forEach(btn => {
+                        const t = new Date(btn.dataset.date).getTime();
+                        if (t > min && t < max) btn.classList.add("is-preview");
+                        if (t === b) btn.classList.add("is-preview-edge");
+                    });
+                }
+                _selectDate(date) {
+                    const d = clamp(date);
+                    if (!this.state.start || (this.state.start && this.state.end)) {
+                        this.state.start = d; this.state.end = undefined; this.state.preview = undefined; this._rerenderGrid(); this._updateFieldTexts(); this._emitChange(); return;
+                    }
+                    if (d.getTime() < this.state.start.getTime()) { this.state.end = this.state.start; this.state.start = d; }
+                    else { this.state.end = d; }
+                    this.state.preview = undefined; this._finishSelection(true);
+                }
+                _finishSelection(closeAfter) { this._rerenderGrid(); this._updateFieldTexts(); this._emitChange(); if (closeAfter) { this.close(); this.el.display.focus(); } }
+                _updateFieldTexts() { const fmt = d => d ? this.formatter.format(d) : "—"; this.el.startText.textContent = fmt(this.state.start); this.el.endText.textContent = fmt(this.state.end); }
+                _announceMonth() { this.el.live.textContent = this.monthFormatter.format(this.state.cursor); }
+                _emitChange() {
+                    const toISO = d => d ? new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString().slice(0, 10) : "";
+                    const s = document.getElementById("start"); const e = document.getElementById("end");
+                    if (s) s.value = toISO(this.state.start); if (e) e.value = toISO(this.state.end);
+                    if (typeof this.opts.onChange === "function") this.opts.onChange({ start: this.state.start, end: this.state.end });
+                }
+                _firstOfMonthFocusable() { return new Date(this.state.cursor.getFullYear(), this.state.cursor.getMonth(), 1); }
+                _moveFocusTo(date) {
+                    const m = this.state.cursor.getMonth();
+                    if (date.getMonth() !== m || date.getFullYear() !== this.state.cursor.getFullYear()) { this.state.cursor = new Date(date.getFullYear(), date.getMonth(), 1); this._rerenderGrid(); }
+                    const iso = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())).toISOString().slice(0, 10);
+                    const btn = Array.from(this.el.grid.querySelectorAll(".drp-day")).find(b => b.dataset.date.slice(0, 10) === iso);
+                    if (btn) { this.state.focusDay = clamp(date); btn.focus(); }
+                }
+                _focusInitialDay() { let target = this.state.start || this._firstOfMonthFocusable(); if (!target) return; this._moveFocusTo(target); }
+                _focusables() { return Array.from(this.el.pop.querySelectorAll("button:not([disabled])")); }
+            }
+            window.DateRangePicker = DateRangePicker;
+        })();
+    </script>
 
-        const tbody = document.getElementById('tbody');
-        const rows = leaderboard.map((p, idx)=>{
-          const avg = (p.totalTicketCount ? (p.totalCashCollected / p.totalTicketCount) : 0);
-          const avatar = p.avatar || 'https://via.placeholder.com/150/808080/FFFFFF?text=MIA';
-          return `
-            <tr>
-              <td>${idx+1}</td>
-              <td><span class="rep-avatar"><img src="${avatar}" alt="${p.closer || 'Rep'}"></span></td>
-              <td>${p.closer || ''}</td>
-              <td>${money(p.totalCashCollected || 0)}</td>
-              <td>${money(avg)}</td>
-              <td>${money(p.totalGrossRevenue || 0)}</td>
-              <td>${p.totalTicketCount ?? 0}</td>
-            </tr>`;
-        }).join('');
-        tbody.innerHTML = rows;
-      }catch(e){
-        console.error(e);
-        toast('Render error — check console');
-      }
-    }
+    <script>
+        const money0 = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(Number(n || 0));
+        const toast = (msg, t = 2600) => { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), t); };
+        const fmtDateMDY = iso => {
+            if (!iso) return '';
+            const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso));
+            if (!m) return iso;
+            const y = +m[1], mo = +m[2], d = +m[3];
+            return `${mo}/${d}/${y}`;
+        };
 
-    if (__DATA__) {
-      render(__DATA__);
-    } else {
-      // load initial data from API using current date inputs (or defaults)
-      const s = document.getElementById('start')?.value || '';
-      const e = document.getElementById('end')?.value || '';
-      if (s && e) requestData({ start: s, end: e });
-      else requestData({});
-    }
+  function tierOf(price) {
+    const p = Number(price || 0);
+    if (p >= 1000) return 'VIP';
+    if (p >= 500)  return 'Premium';
+    if (p >= 200)  return 'Standard';
+    if (p >  0)    return 'Basic';
+    return '';
+  }
 
-    function requestData(opts = {}) {
-      const spin = document.getElementById('spin');
-      if (spin) spin.classList.add('show');
-      const done = () => spin && spin.classList.remove('show');
 
-      // build query
-      const qs = new URLSearchParams();
-      if (opts.start) qs.set('start', opts.start);
-      if (opts.end)   qs.set('end', opts.end);
 
-      // call our Vercel API route (relative path)
-      const url = `/api/getLeaderboard${qs.toString() ? `?${qs.toString()}` : ''}`;
+        function renderScorecards(data) {
+            try {
+                const top3 = (data?.top3 || []).slice(0, 3);
+                const sc = document.getElementById('scorecards');
+                if (!Array.isArray(top3) || top3.length === 0) {
+                    sc.innerHTML = '';
+                    return;
+                }
+                sc.innerHTML = top3
+                    .map((p, i) => {
+                        const rank = i + 1;
+                        const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : 'rank-3';
+                        const avatar = p.avatar || 'https://via.placeholder.com/150/808080/FFFFFF?text=MIA';
+                        const name = String(p?.closer || 'Rep').toUpperCase();
+                        return `
+                            <div class="score-card">
+                                <div class="score-photo ${rankClass}">
+                                    <img src="${avatar}" alt="${p.closer || 'Rep'}">
+                                </div>
+                                <div class="score-amt ${rankClass}">
+                                    ${money0(p?.totalCashCollected || 0)}
+                                </div>
+                                <div class="score-name">${name}</div>
+                                <div class="rank-diamond badge ${rankClass}">
+                                    <span>${rank}${rank === 1 ? 'st' : rank === 2 ? 'nd' : 'rd'}</span>
+                                </div>
+                            </div>
+                        `;
+                    })
+                    .join('');
+            } catch (e) {
+                console.error(e);
+                toast('Render error — check console');
+            }
+        }
 
-      fetch(url, { credentials: 'same-origin' })
-        .then(async (res) => {
-          done();
-          if (!res.ok) {
-            const text = await res.text().catch(() => '');
-            console.warn('Fetch failed', res.status, text);
-            toast('Data load failed');
-            return;
-          }
-          // try parse JSON
-          try {
-            const json = await res.json();
-            if (!json) { toast('No data'); return; }
-            render(json);
-          } catch (err) {
-            console.error('Invalid JSON', err);
-            const txt = await res.text().catch(()=>'');
-            console.warn('Response text:', txt);
-            toast('Data parse failed');
-          }
-        })
-        .catch((err) => {
-          done();
-          console.error('Request failed', err);
-          toast('Data load failed');
-        });
-    }
+        function render(data) {
+            try {
+                renderScorecards(data);
+                
+                const leaderboard = Array.isArray(data?.leaderboard) ? data.leaderboard : [];
+                const tbody = document.getElementById('tbody');
+                const rows = leaderboard.map((p, idx) => {
+                    const avg = (p.totalTicketCount ? (p.totalCashCollected / p.totalTicketCount) : 0);
+                    const avatar = p.avatar || 'https://via.placeholder.com/150/808080/FFFFFF?text=MIA';
+                    return `
+                        <tr>
+                            <td>${idx + 1}</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span class="rep-avatar"><img src="${avatar}" alt="${p.closer || 'Rep'}"></span>
+                                    <span>${p.closer || ''}</span>
+                                </div>
+                            </td>
+                            <td>${money0(p.totalCashCollected || 0)}</td>
+                            <td>${money0(avg)}</td>
+                            <td>${money0(p.totalGrossRevenue || 0)}</td>
+                            <td>${p.totalTicketCount ?? 0}</td>
+                        </tr>`;
+                }).join('');
+                tbody.innerHTML = rows;
+            } catch (e) {
+                console.error(e);
+                toast('Render error');
+            }
+        }
 
-    function applyRange(){
-      const s = document.getElementById('start')?.value || '';
-      const e = document.getElementById('end')?.value || '';
-      if (!s || !e){ toast('Select a date range'); return; }
-      requestData({ start:s, end:e });
-    }
-    function refresh(){ requestData({}); }
-  </script>
+        async function requestData(opts = {}) {
+            const spin = document.getElementById('spin');
+            if (spin) spin.classList.add('show');
+            try {
+                const u = new URL(GAS_URL, window.location.origin);
+                u.searchParams.set('mode', 'json');
+                if (opts.start) u.searchParams.set('start', opts.start);
+                if (opts.end) u.searchParams.set('end', opts.end);
+                const res = await fetch(u.toString(), { method: 'GET' });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const json = await res.json();
+                render(json);
+            } catch (err) {
+                console.error(err);
+                toast('Data load failed');
+            } finally {
+                if (spin) spin.classList.remove('show');
+            }
+        }
 
-  <!-- Download PDF (unchanged) -->
-  <script>
-    function downloadLeaderboardPdf(){
-      const spin = document.getElementById('spin');
-      if (spin) spin.classList.add('show');
+        function applyRange() {
+            const s = document.getElementById('start')?.value || '';
+            const e = document.getElementById('end')?.value || '';
+            if (!s || !e) { toast('Select a date range'); return; }
+            requestData({ start: s, end: e });
+        }
+        function refresh() { requestData({}); }
 
-      const start = document.getElementById('start')?.value || '';
-      const end   = document.getElementById('end')?.value || '';
-      const fileName = `Maxed_Out_Summit_Leaderboard_${start || 'start'}_${end || 'end'}.pdf`;
+        (function init() {
+            const today = new Date();
+            const first = new Date(today.getFullYear(), today.getMonth(), 1);
+            const last = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            const drp = new DateRangePicker(document.getElementById('date-range'), {
+                mode: 'range',
+                value: { start: first, end: last },
+                locale: 'en-US',
+                firstDayOfWeek: 0,
+                onChange: ({ start, end }) => {
+                    const iso = d => d ? new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString().slice(0, 10) : '';
+                    const s = document.getElementById('start'); const e = document.getElementById('end');
+                    if (s) s.value = iso(start);
+                    if (e) e.value = iso(end);
+                }
+            });
+            window._drp = drp;
 
-      const target = document.body;
-      if (!target){ if (spin) spin.classList.remove('show'); return toast('Nothing to capture'); }
+            const s = document.getElementById('start'); const e = document.getElementById('end');
+            const toISO = d => new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString().slice(0, 10);
+            if (s) s.value = toISO(first);
+            if (e) e.value = toISO(last);
 
-      if (typeof html2canvas !== 'undefined' && typeof window.jspdf !== 'undefined'){
-        requestAnimationFrame(async ()=>{
-          try{
-            const canvas = await html2canvas(target, {
-              scale: Math.max(2, window.devicePixelRatio || 1),
-              useCORS: true,
-              allowTaint: false,
-              backgroundColor: null,
-              windowWidth: document.documentElement.scrollWidth,
-              windowHeight: document.documentElement.scrollHeight,
-              scrollX: 0,
-              scrollY: -window.scrollY
+            requestData({ start: s.value, end: e.value });
+        })();
+    </script>
+
+    <script>
+        function downloadPdf() {
+            const spin = document.getElementById('spin');
+            spin && spin.classList.add('show');
+            const start = document.getElementById('start')?.value || '';
+            const end = document.getElementById('end')?.value || '';
+            const fileName = `MITA_2_Ticket_Sales_Report_${start}_${end}.pdf`;
+            const formatDate = (isoDate) => {
+                if (!isoDate) return '';
+                const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate);
+                if (!m) return isoDate;
+                const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                return `${months[+m[2] - 1]} ${+m[3]}, ${m[1]}`;
+            };
+            if (typeof window.jspdf !== 'undefined') {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'pt', 'letter');
+                    const pageW = pdf.internal.pageSize.getWidth();
+                    const pageH = pdf.internal.pageSize.getHeight();
+                    const leftMargin = 80;
+                    pdf.setFillColor(0, 0, 0);
+                    pdf.rect(0, 0, pageW, pageH, 'F');
+                    const logoEl = document.querySelector('.logo');
+                    if (logoEl && logoEl.complete) {
+                        try {
+                            const logoH = 40;
+                            const logoW = (logoEl.naturalWidth / logoEl.naturalHeight) * logoH;
+                            pdf.addImage(logoEl, 'PNG', leftMargin, 50, logoW, logoH);
+                        } catch (e) {
+                            console.warn('Logo add failed:', e);
+                        }
+                    }
+                    let yPos = 120;
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setFontSize(20);
+                    pdf.setTextColor(245, 245, 245);
+                    const title = 'MITA 2 TICKET SALES REPORT';
+                    pdf.text(title, leftMargin, yPos);
+                    yPos += 50;
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.setFontSize(12);
+                    pdf.setTextColor(180, 180, 180);
+                    const period = `Period: ${formatDate(start)} - ${formatDate(end)}`;
+                    pdf.text(period, leftMargin, yPos);
+                    yPos += 60;
+                    pdf.setDrawColor(51, 51, 51);
+                    pdf.setLineWidth(1);
+                    pdf.line(leftMargin, yPos, pageW - 80, yPos);
+                    yPos += 50;
+                    pdf.save(fileName);
+                    toast('PDF report downloaded');
+                    spin && spin.classList.remove('show');
+                } catch (err) {
+                    console.error(err);
+                    toast('PDF generation failed: ' + err.message);
+                    spin && spin.classList.remove('show');
+                }
+            } else {
+                spin && spin.classList.remove('show');
+                toast('jsPDF not available');
+            }
+        }
+    </script>
+
+    <script>
+        function sortTable(columnIndex) {
+            const table = document.getElementById("signupsTable");
+            const tbody = table.querySelector("tbody");
+            const rows = Array.from(tbody.rows);
+
+            const th = table.querySelector("thead").rows[0].cells[columnIndex];
+            const currentOrder = th.dataset.order || '';
+            const ascending = currentOrder !== 'asc';
+
+            rows.sort((a, b) => {
+                let aVal = a.cells[columnIndex].textContent.trim();
+                let bVal = b.cells[columnIndex].textContent.trim();
+
+                if (aVal.includes('$')) {
+                    aVal = aVal.replace(/[$,]/g, '');
+                    bVal = bVal.replace(/[$,]/g, '');
+                }
+
+                const aNum = parseFloat(aVal);
+                const bNum = parseFloat(bVal);
+
+                if (!isNaN(aNum) && !isNaN(bNum)) {
+                    return ascending ? aNum - bNum : bNum - aNum;
+                }
+
+                return ascending
+                    ? aVal.localeCompare(bVal, 'en', { sensitivity: 'base' })
+                    : bVal.localeCompare(aVal, 'en', { sensitivity: 'base' });
             });
 
-            const imgData = canvas.toDataURL('image/png');
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p', 'pt', 'a4');
+            rows.forEach(row => tbody.appendChild(row));
 
-            const pageW = pdf.internal.pageSize.getWidth();
-            const pageH = pdf.internal.pageSize.getHeight();
-            const imgW = pageW;
-            const imgH = canvas.height * (imgW / canvas.width);
+            table.querySelectorAll('thead th').forEach(h => {
+                delete h.dataset.order;
+                h.classList.remove('sorted-asc', 'sorted-desc');
+            });
 
-            let y = 0, first = true;
-            while (y < imgH){
-              if (!first) pdf.addPage();
-              pdf.addImage(imgData, 'PNG', 0, -y, imgW, imgH);
-              y += pageH; first = false;
-            }
+            th.dataset.order = ascending ? 'asc' : 'desc';
+            th.classList.add(ascending ? 'sorted-asc' : 'sorted-desc');
+        }
+    </script>
 
-            pdf.save(fileName);
-            toast('PDF downloaded');
-          }catch(err){
-            console.error(err);
-            toast('Screenshot export failed');
-          }finally{
-            if (spin) spin.classList.remove('show');
-          }
-        });
-      }else{
-        if (spin) spin.classList.remove('show');
-        toast('html2canvas/jsPDF not available');
-      }
-    }
-  </script>
-
-  <!-- libs -->
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </body>
+
 </html>
