@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/getLeaderboard",
-      "destination": "https://script.google.com/home/projects/1uAimYZctR7zoXDWdyJERRJYM2F15z70gOPwBG4gZ4Mi5jxhacfnzJEvP/edit"
+      "destination": "https://script.google.com/macros/s/AKfycbzkAKhRuGsIuSt98FVNWw0_nzEkpXcKko69rb3vWXC2pEYhjn0O8GXl2CSxWC9etw/exec"
     }
   ],
   "headers": [
@@ -15,3 +15,4 @@
     }
   ]
 }
+
