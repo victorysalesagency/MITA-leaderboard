@@ -1322,7 +1322,9 @@
                 if (bgImg) {
                     const bgH = pageH;
                     const bgW = (bgImg.naturalWidth / bgImg.naturalHeight) * bgH;
-                    pdf.addImage(bgImg, 'JPEG', 0, 0, bgW, bgH);
+                    const bgX = (pageW - bgW) / 2;
+                    const bgY = 0;
+                    pdf.addImage(bgImg, 'JPEG', bgX, bgY, bgW, bgH);
                 } else {
                     pdf.setFillColor(13, 13, 13);
                     pdf.rect(0, 0, pageW, pageH, 'F');
@@ -1342,11 +1344,11 @@
                 pdf.setTextColor(245, 245, 245);
                 const title = 'MITA SALES LEADERBOARD';
                 pdf.text(title, leftMargin, yPos);
-                yPos += 20;
+                yPos += 50;
                 pdf.setFont('helvetica', 'normal');
                 pdf.setFontSize(12);
                 pdf.setTextColor(180, 180, 180);
-                const period = `October 1, 2025 - October 31, 2025`;
+                const period = `Period: ${formatDate(start)} - ${formatDate(end)}`;
                 pdf.text(period, leftMargin, yPos);
                 pdf.save(fileName);
                 toast('PDF report downloaded');
@@ -1357,18 +1359,38 @@
                 spin && spin.classList.remove('show');
             }
         };
+        const loadBgAsDataUrl = async (url) => {
+            try {
+                const res = await fetch(url + '?v=' + Date.now(), { cache: 'no-store' });
+                const blob = await res.blob();
+                return await new Promise((resolve) => {
+                    const fr = new FileReader();
+                    fr.onload = () => resolve(fr.result);
+                    fr.readAsDataURL(blob);
+                });
+            } catch {
+                return null;
+            }
+        };
+        const createImg = (src, onready) => {
+            const img = new Image();
+            img.onload = () => onready(img);
+            img.onerror = () => onready(null);
+            img.src = src;
+        };
         if (typeof window.jspdf !== 'undefined') {
-            const bg = new Image();
-            bg.crossOrigin = 'anonymous';
-            bg.onload = () => buildPdf(bg);
-            bg.onerror = () => buildPdf(null);
-            bg.src = 'https://storage.googleapis.com/msgsndr/OLDsMUaIywbz0mgllz8s/media/68b367c8f772203732a23dfe.jpeg';
+            loadBgAsDataUrl('https://storage.googleapis.com/msgsndr/OLDsMUaIywbz0mgllz8s/media/68b367c8f772203732a23dfe.jpeg')
+                .then((dataUrl) => {
+                    if (!dataUrl) return buildPdf(null);
+                    createImg(dataUrl, buildPdf);
+                });
         } else {
             spin && spin.classList.remove('show');
             toast('jsPDF not available');
         }
     }
 </script>
+
 
     <script>
         function sortTable(columnIndex) {
@@ -1418,5 +1440,6 @@
 </body>
 
 </html>
+
 
 
