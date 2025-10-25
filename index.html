@@ -1318,13 +1318,11 @@
                 const pdf = new jsPDF('p', 'pt', 'letter');
                 const pageW = pdf.internal.pageSize.getWidth();
                 const pageH = pdf.internal.pageSize.getHeight();
-                const leftMargin = 80;
                 if (bgImg) {
                     const bgH = pageH;
                     const bgW = (bgImg.naturalWidth / bgImg.naturalHeight) * bgH;
                     const bgX = (pageW - bgW) / 2;
-                    const bgY = 0;
-                    pdf.addImage(bgImg, 'JPEG', bgX, bgY, bgW, bgH);
+                    pdf.addImage(bgImg, 'JPEG', bgX, 0, bgW, bgH);
                 } else {
                     pdf.setFillColor(13, 13, 13);
                     pdf.rect(0, 0, pageW, pageH, 'F');
@@ -1343,13 +1341,17 @@
                 pdf.setFontSize(20);
                 pdf.setTextColor(245, 245, 245);
                 const title = 'MITA SALES LEADERBOARD';
-                pdf.text(title, leftMargin, yPos);
-                yPos += 12.5;
+                const titleW = pdf.getTextWidth(title);
+                const titleX = (pageW - titleW) / 2;
+                pdf.text(title, titleX, yPos);
+                yPos += 20;
                 pdf.setFont('helvetica', 'normal');
                 pdf.setFontSize(12);
                 pdf.setTextColor(180, 180, 180);
                 const period = `Period: ${formatDate(start)} - ${formatDate(end)}`;
-                pdf.text(period, leftMargin, yPos);
+                const periodW = pdf.getTextWidth(period);
+                const periodX = (pageW - periodW) / 2;
+                pdf.text(period, periodX, yPos);
                 pdf.save(fileName);
                 toast('PDF report downloaded');
                 spin && spin.classList.remove('show');
@@ -1439,6 +1441,7 @@
 </body>
 
 </html>
+
 
 
 
