@@ -1342,11 +1342,11 @@
                 pdf.setTextColor(245, 245, 245);
                 const title = 'MITA SALES LEADERBOARD';
                 pdf.text(title, leftMargin, yPos);
-                yPos += 50;
+                yPos += 20;
                 pdf.setFont('helvetica', 'normal');
                 pdf.setFontSize(12);
                 pdf.setTextColor(180, 180, 180);
-                const period = `Period: ${formatDate(start)} - ${formatDate(end)}`;
+                const period = `October 1, 2025 - October 31, 2025`;
                 pdf.text(period, leftMargin, yPos);
                 pdf.save(fileName);
                 toast('PDF report downloaded');
@@ -1418,4 +1418,5 @@
 </body>
 
 </html>
+
 
