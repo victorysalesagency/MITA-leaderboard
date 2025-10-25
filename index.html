@@ -1327,6 +1327,7 @@
                     pdf.setFillColor(13, 13, 13);
                     pdf.rect(0, 0, pageW, pageH, 'F');
                 }
+
                 const logoEl = document.querySelector('.logo');
                 if (logoEl && logoEl.complete) {
                     try {
@@ -1336,8 +1337,9 @@
                         pdf.addImage(logoEl, 'PNG', logoX, 50, logoW, logoH);
                     } catch (e) {}
                 }
+
                 let yPos = 120;
-                const xPos = 40;
+                const xPos = 18; // 0.25 inch inset
                 pdf.setFont('helvetica', 'bold');
                 pdf.setFontSize(20);
                 pdf.setTextColor(245, 245, 245);
@@ -1348,6 +1350,7 @@
                 pdf.setTextColor(180, 180, 180);
                 const period = `Period: ${formatDate(start)} - ${formatDate(end)}`;
                 pdf.text(period, xPos, yPos, { baseline: 'top', align: 'left' });
+
                 pdf.save(fileName);
                 toast('PDF report downloaded');
                 spin && spin.classList.remove('show');
@@ -1357,6 +1360,7 @@
                 spin && spin.classList.remove('show');
             }
         };
+
         const loadBgAsDataUrl = async (url) => {
             try {
                 const res = await fetch(url + '?v=' + Date.now(), { cache: 'no-store' });
@@ -1370,12 +1374,14 @@
                 return null;
             }
         };
+
         const createImg = (src, onready) => {
             const img = new Image();
             img.onload = () => onready(img);
             img.onerror = () => onready(null);
             img.src = src;
         };
+
         if (typeof window.jspdf !== 'undefined') {
             loadBgAsDataUrl('https://storage.googleapis.com/msgsndr/Jtled2GgYMXns1G9o1uH/media/68fc3218f1ef988a1ffdb2ef.jpeg')
                 .then((dataUrl) => {
@@ -1388,6 +1394,7 @@
         }
     }
 </script>
+
 
 
 
@@ -1440,6 +1447,7 @@
 </body>
 
 </html>
+
 
 
 
