@@ -1312,15 +1312,21 @@
             const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             return `${months[+m[2] - 1]} ${+m[3]}, ${m[1]}`;
         };
-        if (typeof window.jspdf !== 'undefined') {
+        const buildPdf = (bgImg) => {
             try {
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'pt', 'letter');
                 const pageW = pdf.internal.pageSize.getWidth();
                 const pageH = pdf.internal.pageSize.getHeight();
                 const leftMargin = 80;
-                pdf.setFillColor(13, 13, 13);
-                pdf.rect(0, 0, pageW, pageH, 'F');
+                if (bgImg) {
+                    const bgH = pageH;
+                    const bgW = (bgImg.naturalWidth / bgImg.naturalHeight) * bgH;
+                    pdf.addImage(bgImg, 'JPEG', 0, 0, bgW, bgH);
+                } else {
+                    pdf.setFillColor(13, 13, 13);
+                    pdf.rect(0, 0, pageW, pageH, 'F');
+                }
                 const logoEl = document.querySelector('.logo');
                 if (logoEl && logoEl.complete) {
                     try {
@@ -1328,9 +1334,7 @@
                         const logoW = (logoEl.naturalWidth / logoEl.naturalHeight) * logoH;
                         const logoX = (pageW - logoW) / 2;
                         pdf.addImage(logoEl, 'PNG', logoX, 50, logoW, logoH);
-                    } catch (e) {
-                        console.warn('Logo add failed:', e);
-                    }
+                    } catch (e) {}
                 }
                 let yPos = 120;
                 pdf.setFont('helvetica', 'bold');
@@ -1352,6 +1356,13 @@
                 toast('PDF generation failed: ' + err.message);
                 spin && spin.classList.remove('show');
             }
+        };
+        if (typeof window.jspdf !== 'undefined') {
+            const bg = new Image();
+            bg.crossOrigin = 'anonymous';
+            bg.onload = () => buildPdf(bg);
+            bg.onerror = () => buildPdf(null);
+            bg.src = 'https://storage.googleapis.com/msgsndr/OLDsMUaIywbz0mgllz8s/media/68b367c8f772203732a23dfe.jpeg';
         } else {
             spin && spin.classList.remove('show');
             toast('jsPDF not available');
@@ -1407,3 +1418,4 @@
 </body>
 
 </html>
+
