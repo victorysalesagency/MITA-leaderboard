@@ -1309,7 +1309,7 @@
             if (!isoDate) return '';
             const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate);
             if (!m) return isoDate;
-            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
             return `${months[+m[2] - 1]} ${+m[3]}, ${m[1]}`;
         };
         const buildPdf = (bgImg) => {
@@ -1327,6 +1327,7 @@
                     pdf.setFillColor(13, 13, 13);
                     pdf.rect(0, 0, pageW, pageH, 'F');
                 }
+
                 const logoEl = document.querySelector('.logo');
                 if (logoEl && logoEl.complete) {
                     try {
@@ -1336,19 +1337,21 @@
                         pdf.addImage(logoEl, 'PNG', logoX, 50, logoW, logoH);
                     } catch (e) {}
                 }
+
+                // draw headlines with zero offset and 20pt gap
                 let yPos = 120;
-                const leftX = 0;
+                const xPos = 0;
                 pdf.setFont('helvetica', 'bold');
                 pdf.setFontSize(20);
                 pdf.setTextColor(245, 245, 245);
-                const title = 'MITA SALES LEADERBOARD';
-                pdf.text(title, leftX, yPos);
+                pdf.text('MITA SALES LEADERBOARD', xPos, yPos, { baseline: 'top', align: 'left' });
                 yPos += 20;
                 pdf.setFont('helvetica', 'normal');
                 pdf.setFontSize(12);
                 pdf.setTextColor(180, 180, 180);
                 const period = `Period: ${formatDate(start)} - ${formatDate(end)}`;
-                pdf.text(period, leftX, yPos);
+                pdf.text(period, xPos, yPos, { baseline: 'top', align: 'left' });
+
                 pdf.save(fileName);
                 toast('PDF report downloaded');
                 spin && spin.classList.remove('show');
@@ -1358,6 +1361,7 @@
                 spin && spin.classList.remove('show');
             }
         };
+
         const loadBgAsDataUrl = async (url) => {
             try {
                 const res = await fetch(url + '?v=' + Date.now(), { cache: 'no-store' });
@@ -1371,12 +1375,14 @@
                 return null;
             }
         };
+
         const createImg = (src, onready) => {
             const img = new Image();
             img.onload = () => onready(img);
             img.onerror = () => onready(null);
             img.src = src;
         };
+
         if (typeof window.jspdf !== 'undefined') {
             loadBgAsDataUrl('https://storage.googleapis.com/msgsndr/Jtled2GgYMXns1G9o1uH/media/68fc3218f1ef988a1ffdb2ef.jpeg')
                 .then((dataUrl) => {
@@ -1389,6 +1395,7 @@
         }
     }
 </script>
+
 
 
     <script>
@@ -1439,6 +1446,7 @@
 </body>
 
 </html>
+
 
 
 
