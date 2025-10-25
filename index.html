@@ -1337,21 +1337,18 @@
                     } catch (e) {}
                 }
                 let yPos = 120;
+                const leftX = 0;
                 pdf.setFont('helvetica', 'bold');
                 pdf.setFontSize(20);
                 pdf.setTextColor(245, 245, 245);
                 const title = 'MITA SALES LEADERBOARD';
-                const titleW = pdf.getTextWidth(title);
-                const titleX = (pageW - titleW) / 2;
-                pdf.text(title, titleX, yPos);
+                pdf.text(title, leftX, yPos);
                 yPos += 20;
                 pdf.setFont('helvetica', 'normal');
                 pdf.setFontSize(12);
                 pdf.setTextColor(180, 180, 180);
                 const period = `Period: ${formatDate(start)} - ${formatDate(end)}`;
-                const periodW = pdf.getTextWidth(period);
-                const periodX = (pageW - periodW) / 2;
-                pdf.text(period, periodX, yPos);
+                pdf.text(period, leftX, yPos);
                 pdf.save(fileName);
                 toast('PDF report downloaded');
                 spin && spin.classList.remove('show');
@@ -1392,6 +1389,7 @@
         }
     }
 </script>
+
 
     <script>
         function sortTable(columnIndex) {
@@ -1441,6 +1439,7 @@
 </body>
 
 </html>
+
 
 
 
